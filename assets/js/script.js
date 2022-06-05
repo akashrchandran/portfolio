@@ -3,13 +3,15 @@ $(window).on("load", function(){
 });
 // Header Scroll
 let nav = document.querySelector(".navbar");
-window.onscroll = function () {
+$( window ).scroll(function () {
+    console.log(document.documentElement.scrollTop);
     if(document.documentElement.scrollTop > 20){
         nav.classList.add("header-scrolled");
     }else{
         nav.classList.remove("header-scrolled");
     }
 } 
+)
 
 // nav hide 
 let navBar = document.querySelectorAll(".nav-link");
@@ -26,7 +28,7 @@ document.getElementById("year").innerHTML = (new Date().getFullYear());
 
 // typing animation\
 var options = {
-    strings: ['Student.', 'Web Developer.', 'Tech Enthusiast.'],
+    strings: ['Web Developer.', 'Student.', 'Tech Enthusiast.'],
     typeSpeed: 150,
     backSpeed: 150,
     loop: true,
@@ -88,8 +90,8 @@ window.onscroll = function () {
 
 function scrollFunction() {
   if (
-    document.body.scrollTop > 30 ||
-    document.documentElement.scrollTop > 30
+    document.body.scrollTop > 20 ||
+    document.documentElement.scrollTop > 20
   ) {
     mybutton.style.display = "block";
   } else {

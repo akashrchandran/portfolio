@@ -27,6 +27,15 @@ body {
     background-color: var(--secondary-color);
 }
 
+#btn-back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 30px;
+    display: none;
+    z-index: 2;
+}
+
 a {
     text-decoration: none;
 }

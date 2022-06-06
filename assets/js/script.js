@@ -4,7 +4,6 @@ $(window).on("load", function(){
 // Header Scroll
 let nav = document.querySelector(".navbar");
 $( window ).scroll(function () {
-    console.log(document.documentElement.scrollTop);
     if(document.documentElement.scrollTop > 20){
         nav.classList.add("header-scrolled");
     }else{

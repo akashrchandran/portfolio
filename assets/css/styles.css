@@ -163,6 +163,20 @@ p {
     margin-bottom: 12px;
     background: var(--primary-color);
     background: var(--gradient-text);
+    background-clip: var(--gradient-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.supernumber {
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 60px;
+    margin: 10px;
+    background: var(--primary-color);
+    background: var(--gradient-text);
+    background-clip: var(--gradient-color);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

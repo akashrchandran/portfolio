@@ -15,7 +15,7 @@ git clone https://github.com/<your_name>/portfolio.git
 **3.** Navigate to the project directory :file_folder: .
 
 ```
-cd website
+cd portfolio
 ```
 
 **4.** Add a reference(remote) to the original repository.
@@ -69,4 +69,4 @@ git push -u origin <your_branch_name>
 
 **14.** Click on `Create Pull Request`.
 
-**15** Voila! You have made a PR to Portfolio Website. Sit back patiently and relax while your PR is reviewed.
+**15** Voila! You have made a PR to portfolio website. Sit back patiently and relax while your PR is reviewed.

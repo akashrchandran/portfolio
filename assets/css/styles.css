@@ -319,38 +319,11 @@ button {
     overflow: visible;
 }
 
-.about_wrapper .progress-bar1 {
+.about_wrapper .progress-bar {
     background-color: var(--primary-color);
     background-image: var(--gradient-color);
 }
-.about_wrapper .progress-bar2 {
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
-.about_wrapper .progress-bar3 {
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
-.about_wrapper .progress-bar4 {
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
-.about_wrapper .progress-bar5{
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
-.about_wrapper .progress-bar6{
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
-.about_wrapper .progress-bar7{
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
-.about_wrapper .progress-bar8{
-    background-color: var(--primary-color);
-    background-image: var(--gradient-color);
-}
+
 
 .about_wrapper .single-progress h6 {
     text-align: left;

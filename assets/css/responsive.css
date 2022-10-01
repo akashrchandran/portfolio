@@ -93,3 +93,11 @@
         min-height: 500px;
     }
 }
+@media only screen and (max-width: 480px) {
+    .fa-arrow-circle-left{
+        display: none;
+    }
+    .fa-arrow-circle-right{
+        display: none;
+    }
+}

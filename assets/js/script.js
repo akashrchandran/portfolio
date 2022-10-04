@@ -68,7 +68,6 @@ function sendEmail() {
         emailbutton.style = "background: red";
         emailbutton.innerHTML = '<i class="fa fa-times"></i> Failed';
         setTimeout(location.reload.bind(location), 2000);
-
     }
     else {
         var data = {

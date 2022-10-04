@@ -415,12 +415,9 @@ button {
     border-color: var(--primary-color);
     color: var(--text-white); 
 }  
-.contact_wrapper .call_details{
-    color:var(--text-gray);
-}
-.contact_wrapper .call_details a{
-    font-weight: 700;
-    color:var(--text-gray);
+
+.contact_wrapper button {
+    width: 10vw;
 }
 
 .footer_wrapper {

@@ -626,25 +626,27 @@
 					<span class="subtitle">Let's Say Hi</span>
 					<h2>Hire Me.</h2>
 					<div id="formaker">
-						<div class="mb-4">
-							<input type="text" class="form-control" id="form-name" placeholder="Your Name..."
-								autocomplete="off" required />
-						</div>
-						<div class="mb-4">
-							<input type="number" class="form-control" id="form-phone" placeholder="Your Phone..."
-								autocomplete="off" />
-						</div>
-						<div class="mb-4">
-							<input type="email" class="form-control" id="form-email" placeholder="Your Email..."
-								autocomplete="off" required />
-						</div>
-						<div class="mb-4">
-							<input cols="40" rows="4" class="form-control" id="form-message"
-								placeholder="Write a Message..." autocomplete="off" />
-						</div>
-						<button type="submit" value="submit" id="sendmail" class="main-btn" onclick="sendEmail()">
-							Submit
-						</button>
+					<form class="row g-3 needs-validation" onsubmit="sendEmail()">
+							<div class="mb-4">
+								<input type="text" class="form-control" id="form-name" placeholder="Your Name..."
+									autocomplete="off" required />
+							</div>
+							<div class="mb-4">
+								<input type="number" class="form-control" id="form-phone" placeholder="Your Phone..."
+									autocomplete="off" />
+							</div>
+							<div class="mb-4">
+								<input type="email" class="form-control" id="form-email" placeholder="Your Email..."
+									autocomplete="off" required />
+							</div>
+							<div class="mb-4">
+								<input class="form-control" id="form-message"
+									placeholder="Write a Message..." autocomplete="off" />
+							</div>
+							<button type="submit" value="submit" id="sendmail" class="main-btn">
+								Submit
+							</button>
+						</form>
 					</div>
 				</div>
 			</div>

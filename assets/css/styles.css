@@ -67,6 +67,7 @@ section {
 .main-btn {
     display: inline-block;
     border-radius: 50px;
+    margin:auto;
     transition: all .4s ease-in-out;
     padding: 10px 27px;
     background-color: transparent;

@@ -89,11 +89,11 @@ function sendEmail() {
         }).done(function () {
             emailbutton.innerHTML = '<i class="fa fa-check"></i> Sent';
             emailbutton.style = "background: green";
-            setTimeout(location.reload.bind(location), 2000);
+           // setTimeout(location.reload.bind(location), 2000);
         }).fail(function (error) {
             emailbutton.innerHTML = '<i class="fa fa-times"></i> Failed';
             emailbutton.style = "background: red";
-            setTimeout(location.reload.bind(location), 2000);
+            //setTimeout(location.reload.bind(location), 2000);
         });
     }
 }

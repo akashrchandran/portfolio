@@ -54,6 +54,10 @@ $('.carousel').on('touchstart', function(event){
     });
 });
 
+$('#contact-form').submit((e)=>{
+    e.preventDefault();
+})
+
 // Send Email func, should have used fetch but jquery seems to be nice
 emailbutton = document.getElementById('sendmail');
 function sendEmail() {

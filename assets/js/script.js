@@ -54,6 +54,10 @@ $('.carousel').on('touchstart', function(event){
     });
 });
 
+$('#contact-form').submit((e)=>{
+    e.preventDefault();
+})
+
 // Send Email func, should have used fetch but jquery seems to be nice
 emailbutton = document.getElementById('sendmail');
 function sendEmail() {
@@ -89,7 +93,7 @@ function sendEmail() {
         }).done(function () {
             emailbutton.innerHTML = '<i class="fa fa-check"></i> Sent';
             emailbutton.style = "background: green";
-            setTimeout(location.reload.bind(location), 2000);
+           setTimeout(location.reload.bind(location), 2000);
         }).fail(function (error) {
             emailbutton.innerHTML = '<i class="fa fa-times"></i> Failed';
             emailbutton.style = "background: red";

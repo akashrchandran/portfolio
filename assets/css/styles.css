@@ -87,7 +87,7 @@ section {
 }
 
 #sendmail{
-    width:fit-content;
+    width: fit-content;
 }
 .disabled_def {
 	transition: none;

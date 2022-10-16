@@ -145,15 +145,18 @@ function hideProgress(){
 });
 
 }
-
+flag=0;
 window.addEventListener('scroll', () => {
     const sectionPos = skillSection.getBoundingClientRect().top;
     const screenPos = window.innerHeight/2;
 
 
-    if(sectionPos < screenPos){
-        showProgress();}
-        else{
+    if(sectionPos < screenPos && !flag){
+        showProgress();
+        flag=1;
+    }
+    else{
+        if(!flag)
             hideProgress();
-        }
+    }
 });

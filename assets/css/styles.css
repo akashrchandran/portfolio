@@ -86,6 +86,10 @@ section {
     color: var(--text-white);
 }
 
+#sendmail{
+    width: fit-content;
+}
+
 .disabled_def {
 	transition: none;
 	cursor: pointer;

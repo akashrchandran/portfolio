@@ -67,8 +67,8 @@ function sendEmail() {
     const phone = document.getElementById("form-phone");
     const email = document.getElementById("form-email");
     const message = document.getElementById("form-message");
-    console.log(!name.value, !email.value, !message.value)
-    if (!name.value || !email.value || !message.value) {
+    const response = grecaptcha.getResponse();
+    if (!name.value || !email.value || !message.value || !response) {
         emailbutton.style = "background: red";
         emailbutton.innerHTML = '<i class="fa fa-times"></i> Failed';
         setTimeout(location.reload.bind(location), 2000);
@@ -83,6 +83,7 @@ function sendEmail() {
                 email: email.value,
                 phone: phone.value,
                 message: message.value,
+                'g-recaptcha-response': response
             }
         };
         emailbutton.style = "cursor: pointer; pointer-events: none;";

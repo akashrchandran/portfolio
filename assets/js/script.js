@@ -162,4 +162,13 @@ window.addEventListener('scroll', () => {
             hideProgress();
     }
 });
-  
+
+
+// Change dark or light icon
+const faviconTag = document.getElementById("faviconid");
+const isDark = window.matchMedia("(prefers-color-scheme: dark)");
+const changeFavicon = () => {
+    if (isDark.matches) faviconTag.href = "assets/image/light_logo.svg";
+    else faviconTag.href = "assets/image/dark_logo.svg";
+  };
+setInterval(changeFavicon, 1000);

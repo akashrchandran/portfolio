@@ -266,9 +266,25 @@ button {
     color: var(--primary-text);
 }
 
+.banner_wrapper h1, .banner_wrapper h2 {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+
 .banner_wrapper .main-btn {
     position: relative;
     z-index: 1;
+    cursor: pointer;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .banner_wrapper {

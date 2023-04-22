@@ -266,9 +266,16 @@ button {
     color: var(--primary-text);
 }
 
-.banner_wrapper .main-btn, .banner_wrapper h1, .banner_wrapper h2, .banner_wrapper p {
+.banner_wrapper h1, .banner_wrapper h2 {
     position: relative;
     z-index: 1;
+    pointer-events: none;
+}
+
+.banner_wrapper .main-btn {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
 }
 
 canvas {

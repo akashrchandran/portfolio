@@ -1,5 +1,9 @@
 @media (max-width:991px) {
 
+    .banner_wrapper h1, .banner_wrapper h2 {
+        pointer-events: auto;
+    }
+
     /* custom css */
     section {
         padding: 30px 0;

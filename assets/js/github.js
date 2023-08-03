@@ -10,8 +10,7 @@ const gists = document.getElementById('github_gist');
 
 async function getUserDetails() {
 	const response = await fetch('https://api.github.com/users/akashrchandran');
-	const data = await response.json();
-	return data;
+	return await response.json();
 }
 
 getUserDetails().then(data => {

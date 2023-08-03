@@ -315,6 +315,7 @@ canvas {
     transition: 0.3s;
 }
 
+
 .about_wrapper ul li .nav-link.active {
     background-color: var(--primary-color);
 }

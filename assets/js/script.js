@@ -1,5 +1,17 @@
 $(window).on("load", function(){
     $('#loader_wrapper').fadeOut('slow');
+    WebGLFluidCustom(document.querySelector('canvas'), {
+        GUI: false,
+        BLOOM_INTENSITY: 0.2,
+        CURL: 30,
+        DENSITY_DISSIPATION: 3,
+        DYE_RESOLUTION: 512,
+        SUNRAYS: false,
+        COLORFUL: true,
+        BLOOM_SOFT_KNEE: 0.7,
+        TRANSPARENT: true,
+        COLOR: { r: 0, g: 0, b: 0 },
+      })
 });
 // Header Scroll
 let nav = document.querySelector(".navbar");
@@ -153,14 +165,13 @@ window.addEventListener('scroll', () => {
     const screenPos = window.innerHeight/2;
 
 
-    if(sectionPos < screenPos && !flag){
-        showProgress();
-        flag=1;
-    }
-    else{
-        if(!flag)
-            hideProgress();
-    }
+    if (sectionPos < screenPos && !flag) {
+            showProgress();
+            flag=1;
+        }
+    else if (!flag) {
+           hideProgress();
+         }
 });
 
 
@@ -168,7 +179,10 @@ window.addEventListener('scroll', () => {
 const faviconTag = document.getElementById("faviconid");
 const isDark = window.matchMedia("(prefers-color-scheme: dark)");
 const changeFavicon = () => {
-    if (isDark.matches) faviconTag.href = "assets/image/light_logo.svg";
-    else faviconTag.href = "assets/image/dark_logo.svg";
+    if (isDark.matches) {
+      faviconTag.href = "assets/image/light_logo.svg";
+    } else {
+      faviconTag.href = "assets/image/dark_logo.svg";
+    }
   };
 setInterval(changeFavicon, 1000);

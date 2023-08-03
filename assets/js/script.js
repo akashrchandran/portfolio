@@ -38,14 +38,14 @@ document.getElementById("year").innerHTML = (new Date().getFullYear());
 
 
 // typing animation\
-var options = {
+const options = {
     strings: ['Web Developer.', 'Student.', 'Tech Enthusiast.'],
     typeSpeed: 150,
     backSpeed: 150,
     loop: true,
 };
 
-var typed = new Typed('.typerjs', options);
+const typed = new Typed('.typerjs', options);
 
 // JQuery for Certificates' Section
 $('.carousel').on('touchstart', function(event){
@@ -88,7 +88,7 @@ function sendEmail() {
     const phone = document.getElementById("form-phone");
     const email = document.getElementById("form-email");
     const message = document.getElementById("form-message");
-    var data = {
+    let data = {
         service_id: 'service_9fnrphq',
         template_id: 'template_ie65z47',
         user_id: 'XCfDptyHXB-M91Vj3',

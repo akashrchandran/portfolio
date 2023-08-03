@@ -201,6 +201,7 @@ button {
     -webkit-transition: all .2s linear;
     -o-transition: all .2s linear;
     transition: all .2s linear;
+    max-width: 100vw;
 }
 
 .header_wrapper .navbar-brand img {

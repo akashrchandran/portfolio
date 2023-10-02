@@ -15,7 +15,7 @@
     --gradient-color: linear-gradient(-224deg, var(--primary-color) 0, #337DFF 100%);
     --gradient-text: linear-gradient(120deg, #1C99FE 20.69%, #7644FF 50.19%, var(--primary-color) 79.69%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--primary-color)', endColorstr='var(--secondary-color)', GradientType=1);
-    --primary-font:'Poppins', sans-serif;
+    --primary-font: 'Poppins', sans-serif;
     /* --primary-text: #FD4766; */
     --primary-text: #fdcc47;
     --text-gray: #c6c9d8bf;
@@ -53,9 +53,9 @@ a {
     background: var(--primary-color);
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    margin: 0;
 }
 
 section {
@@ -66,7 +66,7 @@ section {
 .main-btn {
     display: inline-block;
     border-radius: 50px;
-    margin:auto;
+    margin: auto;
     transition: all .4s ease-in-out;
     padding: 10px 27px;
     background-color: transparent;
@@ -85,14 +85,14 @@ section {
     color: var(--text-white);
 }
 
-#sendmail{
+#sendmail {
     width: fit-content;
 }
 
 .disabled_def {
-	transition: none;
-	cursor: pointer;
-	pointer-events: none;
+    transition: none;
+    cursor: pointer;
+    pointer-events: none;
 }
 
 h1 {
@@ -140,24 +140,47 @@ p {
 }
 
 .waver {
-	animation-name: wave-animation;  
-	animation-duration: 2.5s; 
-	animation-iteration-count: infinite;
-	transform-origin: 70% 70%; 
-	display: inline-block;
-  }
-  
-  @keyframes wave-animation {
-	  0% { transform: rotate( 0.0deg) }
-	 10% { transform: rotate(14.0deg) }
-	 20% { transform: rotate(-8.0deg) }
-	 30% { transform: rotate(14.0deg) }
-	 40% { transform: rotate(-4.0deg) }
-	 50% { transform: rotate(10.0deg) }
-	 60% { transform: rotate( 0.0deg) }
-	100% { transform: rotate( 0.0deg) }
-  }
-  
+    animation-name: wave-animation;
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+    transform-origin: 70% 70%;
+    display: inline-block;
+}
+
+@keyframes wave-animation {
+    0% {
+        transform: rotate(0.0deg)
+    }
+
+    10% {
+        transform: rotate(14.0deg)
+    }
+
+    20% {
+        transform: rotate(-8.0deg)
+    }
+
+    30% {
+        transform: rotate(14.0deg)
+    }
+
+    40% {
+        transform: rotate(-4.0deg)
+    }
+
+    50% {
+        transform: rotate(10.0deg)
+    }
+
+    60% {
+        transform: rotate(0.0deg)
+    }
+
+    100% {
+        transform: rotate(0.0deg)
+    }
+}
+
 
 .subtitle {
     display: inline-block;
@@ -192,12 +215,12 @@ textarea:focus,
 textarea:hover,
 button {
     outline: none !important;
-    box-shadow: none !important; 
+    box-shadow: none !important;
 }
 
 /* 2 Navbar */
 .header_wrapper .navbar {
-    padding:15px 0;
+    padding: 15px 0;
     -webkit-transition: all .2s linear;
     -o-transition: all .2s linear;
     transition: all .2s linear;
@@ -212,7 +235,7 @@ button {
 .header_wrapper .navbar-toggler {
     border: 0;
     color: var(--gray-color);
-    line-height:2;
+    line-height: 2;
 }
 
 .header_wrapper .navbar-toggler:focus {
@@ -228,7 +251,7 @@ button {
     font-size: 16px;
     font-weight: 500;
     color: var(--text-gray);
-    display:inline-block;
+    display: inline-block;
 }
 
 .header_wrapper .nav-item .nav-link::after {
@@ -253,10 +276,10 @@ button {
 }
 
 .header-scrolled {
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%; 
+    width: 100%;
     background-color: var(--bg-dark-blue);
     -webkit-box-shadow: 0 4px 6px 0 rgba(12, 0, 46, .05);
     box-shadow: 0 4px 6px 0 rgba(12, 0, 46, .05);
@@ -267,7 +290,8 @@ button {
     color: var(--primary-text);
 }
 
-.banner_wrapper h1, .banner_wrapper h2 {
+.banner_wrapper h1,
+.banner_wrapper h2 {
     position: relative;
     z-index: 1;
     pointer-events: none;
@@ -318,6 +342,7 @@ canvas {
 
 
 .about_wrapper ul li .nav-link.active {
+    color: var(--bg-dark-blue);
     background-color: var(--primary-color);
 }
 
@@ -326,12 +351,13 @@ canvas {
     position: relative;
     overflow: hidden;
 }
+
 .about_wrapper img {
     width: 300px;
     height: 400px;
     display: block;
     margin-left: auto;
-  margin-right: auto;
+    margin-right: auto;
 }
 
 .about_wrapper .single-progress .progress {
@@ -345,6 +371,18 @@ canvas {
 .about_wrapper .progress-bar {
     background-color: var(--primary-color);
     background-image: var(--gradient-color);
+}
+
+.about_wrapper .card {
+    background-color: var(--bg-dark-blue);
+    aspect-ratio: 1;
+    width: 100px;
+    height: 100px;
+}
+
+.about_wrapper .card img {
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -385,6 +423,7 @@ canvas {
     box-shadow: 0px 2px 70px 0px rgb(253 71 102 / 5%);
     transform: translateY(-5px);
 }
+
 /* projects */
 .projects_wrapper .card {
     box-shadow: 0 0 16px 4px var(--bg-dark-blue);
@@ -430,13 +469,14 @@ canvas {
     font-weight: 400;
     padding: 10px 20px;
 }
+
 .contact_wrapper .form-control:hover,
 .contact_wrapper textarea:hover,
 .contact_wrapper .form-control:focus,
-.contact_wrapper textarea:focus { 
+.contact_wrapper textarea:focus {
     border-color: var(--primary-color);
-    color: var(--text-white); 
-}  
+    color: var(--text-white);
+}
 
 .contact_wrapper button {
     width: 120px;
@@ -474,10 +514,12 @@ canvas {
     box-shadow: 0 10px 15px 0 rgb(0 0 0 / 10%);
     transform: translateY(-3px);
 }
-.footer_wrapper .copyright-text p{
-    font-size:11px;
+
+.footer_wrapper .copyright-text p {
+    font-size: 11px;
     line-height: 20px;
 }
+
 .footer_wrapper .copyright-text a {
     color: var(--primary-color);
 }

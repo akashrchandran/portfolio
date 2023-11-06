@@ -1,3 +1,6 @@
+$(window).on("load", function(){
+    $('#loader_wrapper').fadeOut('slow');
+});
 // Header Scroll
 let nav = document.querySelector(".navbar");
 $( window ).scroll(function () {

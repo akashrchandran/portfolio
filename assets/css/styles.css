@@ -27,6 +27,10 @@ body {
     background-color: var(--secondary-color);
 }
 
+img {
+    -webkit-user-drag: none;
+}
+
 #btn-back-to-top {
     position: fixed;
     bottom: 20px;

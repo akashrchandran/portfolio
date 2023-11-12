@@ -1,44 +1,105 @@
-const fetchBlogs = async () => {
-    const query = `
-    query GetUserArticles($page: Int!, $first: Int!) {
-      user(username: "akashrchandran") {
-        publication {
-          posts(page: $page, first: $first) {
-            slug
-            title
-            brief
-            coverImage
-            dateUpdated
-            dateAdded
+let postcards = [];
+let postBtn = document.getElementById("blogBtn");
+const featured = `<span class="badge featured-badge">
+      <img src="https://cdn.hashnode.com/res/hashnode/image/upload/v1638537289044/KeDRCKlY_.png?w=30" alt="Featured on Hashnode" class="img-fluid" title="Featured on Hashnode">
+      Featured on Hashnode
+    </span>
+`
+
+const fetchBlogs = async (after = "") => {
+  postBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Loading...';
+  const query = `
+    query PostsByPublication($host: String!, $first: Int!, $after: String) {
+      publication(host: $host) {
+        posts(first: $first, after: $after) {
+          edges {
+            node {
+              title
+              url
+              publishedAt
+              featured
+              brief
+              coverImage {
+                url
+              }
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
           }
         }
       }
     }
-    `;
+  `;
 
-    // Define query variables
-    const variables = {
-        page: 1,
-        first: 3
-    };
+  const variables = {
+    host: "blog.akashrchandran.in",
+    first: 3,
+    after: after,
+  };
 
-    // Fetch data from GraphQL API endpoint
-    const response = await fetch('https://api.hashnode.com/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query,
-            variables
-        })
+  try {
+    const response = await fetch('https://gql.hashnode.com/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query,
+        variables
+      })
     });
 
-    // Parse response data
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-    // Log fetched blogs
-    console.log(data.data.user.publications.posts.edges);
+    const { data } = await response.json();
+
+    const posts = data?.publication?.posts?.edges || [];
+    const pageInfo = data?.publication?.posts?.pageInfo;
+    generateBlogs(posts);
+    console.log(postcards)
+    postBtn.onclick = () => { fetchBlogs(pageInfo.endCursor) };
+    postBtn.innerHTML = "Load More";
+  } catch (error) {
+    postBtn.style = "background: red";
+    postBtn.innerHTML = '<i class="fa fa-times"></i> Failed';
+    console.error('Error fetching data:', error.message);
+    throw error;
+  }
+};
+
+const generateBlogs = (blogs) => {
+  const cardContainer = document.getElementById('blogContainer');
+  blogs.forEach((blog) => {
+    const card = document.createElement('div');
+    card.className = 'col-sm-4  mb-4';
+
+    card.innerHTML = `
+      <div class="card p-0">
+        <a href="${blog.node.url}" target="_blank" rel="noopener noreferrer">
+          <img class="card-img-top" src="${blog.node.coverImage.url}" alt="Card image cap" />
+          ${blog.node.featured ? featured : ""}
+          <div class="card-body text-md-start text-center">
+            <h3>${blog.node.title}</h3>
+            <span style="display: flex; justify-content: space-between;">
+              <h6>${parseDate(blog.node.publishedAt)}</h6>
+            </span>
+            <p>${blog.node.brief}</p>
+          </div>
+        </a>
+      </div>
+    `;
+    cardContainer.appendChild(card, cardContainer.firstChild);
+  });
+}
+
+function parseDate(date) {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+  const parsedData = new Date(date);
+  return `${parsedData.getDate()} ${months[parsedData.getMonth()]} ${parsedData.getFullYear()}`
 }
 
 fetchBlogs();

@@ -7,7 +7,7 @@ const featured = `<span class="badge featured-badge">
 `
 
 const fetchBlogs = async (after = "") => {
-  postBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Loading...';
+  postBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
   const query = `
     query PostsByPublication($host: String!, $first: Int!, $after: String) {
       publication(host: $host) {
@@ -60,9 +60,14 @@ const fetchBlogs = async (after = "") => {
     const posts = data?.publication?.posts?.edges || [];
     const pageInfo = data?.publication?.posts?.pageInfo;
     generateBlogs(posts);
-    console.log(postcards)
-    postBtn.onclick = () => { fetchBlogs(pageInfo.endCursor) };
     postBtn.innerHTML = "Load More";
+    if (pageInfo.hasNextPage) {
+      postBtn.onclick = () => {
+        fetchBlogs(pageInfo.endCursor);
+      };
+    } else {
+      postBtn.remove();
+    }
   } catch (error) {
     postBtn.style = "background: red";
     postBtn.innerHTML = '<i class="fa fa-times"></i> Failed';
@@ -75,17 +80,17 @@ const generateBlogs = (blogs) => {
   const cardContainer = document.getElementById('blogContainer');
   blogs.forEach((blog) => {
     const card = document.createElement('div');
-    card.className = 'col-sm-4  mb-4';
+    card.className = 'col-sm-4 mb-4';
 
     card.innerHTML = `
       <div class="card p-0">
         <a href="${blog.node.url}" target="_blank" rel="noopener noreferrer">
           <img class="card-img-top" src="${blog.node.coverImage.url}" alt="Card image cap" />
           ${blog.node.featured ? featured : ""}
-          <div class="card-body text-md-start text-center">
-            <h3>${blog.node.title}</h3>
+          <div class="card-body">
+            <h3 class="text-center">${blog.node.title}</h3>
             <span style="display: flex; justify-content: space-between;">
-              <h6>${parseDate(blog.node.publishedAt)}</h6>
+              <h6 class="text-start">${parseDate(blog.node.publishedAt)}</h6>
             </span>
             <p>${blog.node.brief}</p>
           </div>
@@ -96,7 +101,7 @@ const generateBlogs = (blogs) => {
   });
 }
 
-function parseDate(date) {
+const parseDate = (date) => {
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
   const parsedData = new Date(date);
   return `${parsedData.getDate()} ${months[parsedData.getMonth()]} ${parsedData.getFullYear()}`

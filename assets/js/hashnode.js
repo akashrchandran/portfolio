@@ -1,7 +1,7 @@
 let postcards = [];
 let postBtn = document.getElementById("blogBtn");
 const featured = `<span class="badge featured-badge">
-      <img src="https://cdn.hashnode.com/res/hashnode/image/upload/v1638537289044/KeDRCKlY_.png?w=30" alt="Featured on Hashnode" class="img-fluid" title="Featured on Hashnode">
+      <img src="https://cdn.hashnode.com/res/hashnode/image/upload/v1638537289044/KeDRCKlY_.png" alt="Featured on Hashnode" class="img-fluid" title="Featured on Hashnode">
       Featured on Hashnode
     </span>
 `

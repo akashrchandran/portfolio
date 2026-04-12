@@ -1,0 +1,367 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { projects } from '../data/site-data';
+import { getAllPosts } from '../lib/hashnode/client';
+
+const featuredProjects = projects.filter((p) => p.featured);
+const hashnodePosts = await getAllPosts();
+const recentPosts = [...hashnodePosts]
+  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+  .slice(0, 4);
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return dateString;
+  }
+
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+};
+
+const workExperience = [
+  {
+    year: "2024",
+    role: "Backend Engineer",
+    company: "Litmus7 Systems Consulting Pvt Ltd",
+    description: "Built secure Spring Boot APIs with Keycloak and Spring Security, and architected ETL and workflow systems using Spring Batch and Temporal.",
+    tech: ["Spring Boot", "Keycloak", "MongoDB", "Spring Batch", "Postgres"],
+  },
+  {
+    year: "2023",
+    endYear: "2023",
+    role: "Back End Developer",
+    company: "GTech Mulearn",
+    description: "Engineered and maintained Django REST Framework APIs and MySQL-backed data models for core platform workflows.",
+    tech: ["Django REST Framework", "MySQL", "Python"],
+  },
+];
+
+const socialLinks = [
+  { name: "GitHub", url: "https://github.com/akashrchandran" },
+  { name: "LinkedIn", url: "https://linkedin.com/in/akashrchandran" },
+  { name: "Email", url: "mailto:chandranrakash@gmail.com" },
+  { name: "Phone", url: "tel:+919511807104" },
+  { name: "Twitter", url: "https://twitter.com/akas__h" },
+  { name: "Resume", url: "/akash_r_chandran_resume.pdf" },
+];
+
+const techStack = ["Java", "Python", "SQL", "JavaScript", "Spring Boot", "Spring Security", "Django REST Framework", "FastAPI", "PostgreSQL", "MongoDB", "Kafka", "Temporal", "Docker", "GCP"];
+
+const focusAreas = [
+  "Building fast, reliable, and secure backend systems",
+  "Designing microservices and high-volume data workflows",
+  "Reducing database load to improve overall system speed",
+  "Automating background processing for resilient operations",
+];
+---
+
+<BaseLayout title="Akash R Chandran — Backend Engineer" description="Backend Engineer focused on building fast, reliable, and secure backend systems at production scale.">
+  <div class="min-h-screen bg-background text-foreground relative">
+    <Header />
+
+    <main class="max-w-6xl mx-auto px-6 sm:px-8 pt-24">
+      <!-- Hero / Intro -->
+      <header
+        id="intro"
+        class="min-h-[88vh] flex items-center opacity-0 animate-section"
+      >
+        <div class="w-full grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 lg:gap-12 items-stretch">
+          <div class="space-y-7 max-w-3xl lg:min-h-[72vh] lg:flex lg:flex-col lg:justify-center">
+            <div class="space-y-4">
+              <h1 class="text-6xl sm:text-7xl lg:text-[5.2rem] font-light tracking-tight leading-tight">
+                Akash
+                <br />
+                <span class="text-muted-foreground">R Chandran</span>
+              </h1>
+            </div>
+
+            <p class="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-xl">
+              Backend Engineer building <span class="text-foreground font-medium">fast</span>, <span class="text-foreground font-medium">reliable</span>, and <span class="text-foreground font-medium">secure</span> backend systems that scale in production.
+            </p>
+
+            <div class=" bg-muted/10 space-y-4 max-w-xl">
+              <div>
+                <div class="text-xs text-muted-foreground font-mono tracking-widest mb-3">CURRENTLY</div>
+                <div class="space-y-1">
+                  <div class="text-foreground font-medium">Associate Engineer (R&D)</div>
+                  <div class="text-muted-foreground text-sm">Litmus7 Systems Consulting Pvt Ltd</div>
+                  
+                  <div class="text-xs text-muted-foreground">Jul 2024 — Present</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                Available for work
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3 pt-2">
+              <a href="/projects" class="px-5 py-2.5 rounded-lg border border-border hover:border-muted-foreground/60 bg-muted/20 hover:bg-muted/40 transition-all duration-300 text-sm text-foreground">
+                View projects
+              </a>
+              <a href="#connect" class="px-5 py-2.5 rounded-lg border border-border/40 hover:border-border transition-all duration-300 text-sm text-muted-foreground hover:text-foreground">
+                Contact
+              </a>
+            </div>
+          </div>
+
+          <div class="space-y-6 lg:min-h-[72vh] lg:flex lg:flex-col lg:justify-center">
+            <div class="bg-muted/10 space-y-5">
+              <div class="text-xs text-muted-foreground font-mono tracking-widest">BACKEND STACK</div>
+              <div class="flex flex-wrap gap-2">
+                {techStack.map((skill) => (
+                  <span class="px-3 py-1.5 text-xs border border-border rounded-full hover:border-muted-foreground/60 transition-all duration-300 bg-background/50 hover:bg-background">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+
+              <div class="pt-5 space-y-3">
+                <div class="text-xs text-muted-foreground font-mono tracking-widest">FOCUS</div>
+                <ul class="space-y-2 text-sm text-muted-foreground list-disc ml-4">
+                  {focusAreas.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Work Experience -->
+      <section
+        id="work"
+        class="py-20 sm:py-32 opacity-0 animate-section"
+      >
+        <div class="space-y-12 sm:space-y-16">
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight">Work Experience</h2>
+            <div class="text-sm text-muted-foreground font-mono">2023 — Present</div>
+          </div>
+
+          <div class="space-y-1">
+            {workExperience.map((job) => (
+              <div class="group px-0 py-6 sm:py-8 border-b border-border/40 hover:border-border/80 transition-all duration-300 cursor-pointer">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                  <div class="flex-1 space-y-3">
+                    <div class="flex items-baseline gap-3">
+                      <h3 class="text-lg sm:text-xl font-medium group-hover:text-muted-foreground transition-colors duration-300">{job.role}</h3>
+                      <span class="text-sm text-muted-foreground font-medium">{job.company}</span>
+                    </div>
+                    <p class="text-muted-foreground text-sm leading-relaxed max-w-2xl">{job.description}</p>
+                  </div>
+                  
+                  <div class="flex items-center gap-4 shrink-0">
+                    <span class="text-muted-foreground font-light">{job.year} — {job.endYear ?? 'Present'}</span>
+                  </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 mt-4">
+                  {job.tech.map((tech) => (
+                    <span class="px-2 py-1 text-xs text-muted-foreground bg-muted/20 rounded group-hover:bg-muted/40 transition-colors duration-300">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Projects -->
+      <section
+        id="projects"
+        class="py-20 sm:py-32 opacity-0 animate-section"
+      >
+        <div class="space-y-12 sm:space-y-16">
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight">Featured Projects</h2>
+            <a href="/projects" class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+              View all →
+            </a>
+          </div>
+
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {featuredProjects.map((project) => (
+              <div class="group p-6 sm:p-8 border border-border/40 rounded-xl hover:border-border transition-all duration-300 hover:bg-muted/20 space-y-4">
+                <div class="space-y-2">
+                  <h3 class="text-lg font-medium group-hover:text-muted-foreground transition-colors duration-300">
+                    {project.title}
+                  </h3>
+                  <p class="text-sm text-muted-foreground leading-relaxed">
+                    {project.description}
+                  </p>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  {project.technologies.slice(0, 3).map((tech) => (
+                    <span class="px-2 py-1 text-xs bg-muted/30 rounded text-muted-foreground">
+                      {tech}
+                    </span>
+                  ))}
+                  {project.technologies.length > 3 && (
+                    <span class="px-2 py-1 text-xs bg-muted/30 rounded text-muted-foreground">
+                      +{project.technologies.length - 3}
+                    </span>
+                  )}
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex-1 px-3 py-2 text-xs rounded-lg border border-border/40 hover:border-border text-center text-muted-foreground hover:text-foreground transition-all duration-300"
+                    >
+                      Live
+                    </a>
+                  )}
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex-1 px-3 py-2 text-xs rounded-lg border border-border/40 hover:border-border text-center text-muted-foreground hover:text-foreground transition-all duration-300"
+                    >
+                      GitHub
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Blog / Thoughts -->
+      <section
+        id="thoughts"
+        class="py-20 sm:py-32 opacity-0 animate-section"
+      >
+        <div class="space-y-12 sm:space-y-16">
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight">Blogs</h2>
+            <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+              View all →
+            </a>
+          </div>
+
+          <div class="grid gap-6 sm:gap-8 lg:grid-cols-2">
+            {recentPosts.length ? (
+              recentPosts.map((post) => (
+                <a href={`/blog/${post.slug}`} class="group">
+                  <article class="h-full p-6 sm:p-8 border border-border/40 rounded-xl hover:border-border transition-all duration-300 hover:shadow-md cursor-pointer hover:bg-muted/20 space-y-4">
+                    <div class="space-y-4">
+                      <div class="flex items-center justify-between text-xs text-muted-foreground font-mono">
+                        <span>{formatDate(post.publishedAt)}</span>
+                        <span>{post.readTimeInMinutes} min</span>
+                      </div>
+
+                      <h3 class="text-lg sm:text-xl font-medium leading-tight group-hover:text-muted-foreground transition-colors duration-300">
+                        {post.title}
+                      </h3>
+
+                      <p class="text-muted-foreground text-sm leading-relaxed">
+                        {post.brief || post.subtitle || 'Read the full article for implementation details and engineering trade-offs.'}
+                      </p>
+
+                      <div class="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 pt-2">
+                        <span>Read</span>
+                        <svg
+                          class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </article>
+                </a>
+              ))
+            ) : (
+              <div class="lg:col-span-2 p-6 sm:p-8 border border-border/40 rounded-xl text-sm text-muted-foreground">
+                Set HASHNODE_PUBLICATION_HOST to load posts from Hashnode.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="connect" class="py-20 sm:py-32 opacity-0 animate-section">
+        <div class="max-w-2xl space-y-12">
+          <div class="space-y-6">
+            <h2 class="text-4xl sm:text-5xl font-light tracking-tight">Let's Connect</h2>
+
+            <p class="text-lg sm:text-xl text-muted-foreground leading-relaxed">
+              Always interested in backend engineering opportunities, architecture discussions, and reliability-focused collaborations. Based in Kochi, Kerala.
+            </p>
+
+            <a
+              href="mailto:chandranrakash@gmail.com"
+              class="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border hover:border-muted-foreground/60 bg-muted/20 hover:bg-muted/40 transition-all duration-300 group text-foreground"
+            >
+              <span class="font-medium">Get in touch</span>
+              <svg
+                class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="pt-8 border-t border-border/40 space-y-6">
+            <div class="text-xs text-muted-foreground font-mono tracking-widest">ELSEWHERE</div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  href={social.url}
+                  class="group px-4 py-3 border border-border/40 rounded-lg hover:border-border transition-all duration-300 hover:bg-muted/20 text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {social.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  </div>
+
+  <!-- Section reveal animation -->
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in-up');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    document.querySelectorAll('.animate-section').forEach((section) => {
+      observer.observe(section);
+    });
+  </script>
+</BaseLayout>

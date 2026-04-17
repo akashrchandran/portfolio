@@ -3,7 +3,14 @@
 
 <footer class="py-12 sm:py-16 border-t border-border/40 text-center sm:text-left max-w-6xl mx-auto px-6 sm:px-8">
   <div class="space-y-4">
-    <div class="text-sm text-muted-foreground">© 2025 Akash R Chandran. All rights reserved.</div>
+    <div class="text-sm text-muted-foreground">© <span id="current-year"></span> Akash R Chandran. All rights reserved.</div>
     <div class="text-xs text-muted-foreground">Built with Astro and Tailwind CSS</div>
   </div>
 </footer>
+
+<script>
+  const yearEl = document.getElementById('current-year');
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
+  }
+</script>

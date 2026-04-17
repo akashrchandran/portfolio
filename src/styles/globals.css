@@ -46,13 +46,21 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Scroll behavior */
 html {
+  font-size: 16px;
   scroll-behavior: smooth;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 17px;
+  }
 }
 
 /* Custom scrollbar */

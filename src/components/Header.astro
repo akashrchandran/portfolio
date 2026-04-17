@@ -8,8 +8,9 @@ const sections = [
 ];
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/40">
-  <nav class="max-w-6xl mx-auto px-6 sm:px-8 py-4 flex items-center justify-between">
+<header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-6">
+  <div class="max-w-6xl mx-auto rounded-2xl border border-border/40 bg-background/80 backdrop-blur-md">
+  <nav class="px-6 sm:px-8 py-4 flex items-center justify-between">
     <a href="/" class="text-lg font-light tracking-tight hover:opacity-70 transition-opacity duration-300">Akash</a>
     
     <!-- Desktop nav -->
@@ -68,8 +69,8 @@ const sections = [
   </nav>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="md:hidden hidden border-t border-border/40 bg-background/95 backdrop-blur-md">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
+  <div id="mobile-menu" class="md:hidden hidden border-t border-border/40 bg-background/95 backdrop-blur-md rounded-b-2xl">
+    <div class="px-6 py-4 flex flex-col gap-4">
       {sections.map((section) => (
         <a
           href={section.href}
@@ -87,6 +88,7 @@ const sections = [
         Toggle Theme
       </button>
     </div>
+  </div>
   </div>
 </header>
 

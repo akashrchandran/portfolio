@@ -11,7 +11,22 @@ const sections = [
 <header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-6">
   <div class="max-w-6xl mx-auto rounded-2xl border border-border/40 bg-background/80 backdrop-blur-md">
   <nav class="px-6 sm:px-8 py-4 flex items-center justify-between">
-    <a href="/" class="text-lg font-light tracking-tight hover:opacity-70 transition-opacity duration-300">Akash</a>
+    <a href="/" class="inline-flex items-center hover:opacity-70 transition-opacity duration-300" aria-label="Go to homepage">
+      <img
+        src="/logo-light.webp"
+        alt="Akash logo"
+        class="block dark:hidden h-6 md:h-7 w-auto select-none"
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        src="/logo-dark.webp"
+        alt="Akash logo"
+        class="hidden dark:block h-6 md:h-7 w-auto select-none"
+        loading="eager"
+        decoding="async"
+      />
+    </a>
     
     <!-- Desktop nav -->
     <div class="hidden md:flex items-center gap-8">

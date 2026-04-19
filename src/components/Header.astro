@@ -45,7 +45,7 @@ const sections = [
       <!-- Theme toggle (desktop only) -->
       <button
         id="theme-toggle-desktop"
-        class="group hidden md:inline-flex p-2 rounded-lg border border-border/40 hover:border-border transition-all duration-300"
+        class="group hidden md:inline-flex p-2 rounded-lg border border-border/40 hover:border-border hover:bg-[color:var(--brand-soft)] transition-all duration-300"
         aria-label="Toggle theme"
       >
         <!-- Sun icon (shown in dark mode) -->
@@ -73,7 +73,7 @@ const sections = [
       <!-- Mobile menu button -->
       <button
         id="mobile-menu-btn"
-        class="md:hidden p-2 rounded-lg border border-border/40 hover:border-border transition-all duration-300"
+        class="md:hidden p-2 rounded-lg border border-border/40 hover:border-border hover:bg-[color:var(--brand-soft)] transition-all duration-300"
         aria-label="Toggle menu"
       >
         <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,10 +148,10 @@ const sections = [
               const linkSection = link.getAttribute('data-section');
               if (linkSection === id) {
                 link.classList.remove('text-muted-foreground');
-                link.classList.add('text-foreground', 'font-medium');
+                link.classList.add('text-brand', 'font-medium');
               } else {
                 link.classList.add('text-muted-foreground');
-                link.classList.remove('text-foreground', 'font-medium');
+                link.classList.remove('text-brand', 'font-medium');
               }
             });
           }

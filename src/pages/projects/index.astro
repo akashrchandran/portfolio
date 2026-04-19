@@ -30,7 +30,7 @@ const categories = [...new Set(projects.map((p) => p.category))];
           <div class="flex flex-wrap gap-2" id="category-filters">
             <button
               data-category="all"
-              class="category-btn active px-4 py-2 rounded-lg border transition-all duration-300 text-sm border-foreground bg-muted/20 text-foreground"
+              class="category-btn active px-4 py-2 rounded-lg border transition-all duration-300 text-sm border-brand bg-brand-soft text-brand"
             >
               All Projects
             </button>
@@ -183,10 +183,10 @@ const categories = [...new Set(projects.map((p) => p.category))];
         const btnCategory = btn.getAttribute('data-category');
         if (btnCategory === category) {
           btn.classList.remove('border-border/40', 'text-muted-foreground');
-          btn.classList.add('border-foreground', 'bg-muted/20', 'text-foreground');
+          btn.classList.add('border-brand', 'bg-brand-soft', 'text-brand');
         } else {
           btn.classList.add('border-border/40', 'text-muted-foreground');
-          btn.classList.remove('border-foreground', 'bg-muted/20', 'text-foreground');
+          btn.classList.remove('border-brand', 'bg-brand-soft', 'text-brand');
         }
       });
 

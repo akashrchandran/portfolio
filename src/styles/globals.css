@@ -17,7 +17,13 @@
   --accent-foreground: #0a0a0a;
   --border: #e5e5e5;
   --input: #e5e5e5;
-  --ring: #0a0a0a;
+  --brand: #006ff0;
+  --brand-hover: #0a84ff;
+  --brand-soft: rgba(0, 111, 240, 0.12);
+  --brand-soft-strong: rgba(0, 111, 240, 0.2);
+  --brand-border: rgba(0, 111, 240, 0.5);
+  --brand-glow: rgba(0, 111, 240, 0.35);
+  --ring: var(--brand);
 }
 
 .dark {
@@ -35,7 +41,13 @@
   --accent-foreground: #f5f5f5;
   --border: #262626;
   --input: #262626;
-  --ring: #f5f5f5;
+  --brand: #0a84ff;
+  --brand-hover: #33a0ff;
+  --brand-soft: rgba(10, 132, 255, 0.14);
+  --brand-soft-strong: rgba(10, 132, 255, 0.22);
+  --brand-border: rgba(10, 132, 255, 0.56);
+  --brand-glow: rgba(10, 132, 255, 0.38);
+  --ring: var(--brand);
 }
 
 * {
@@ -78,5 +90,57 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground);
+  background: var(--brand);
+}
+
+::selection {
+  background: var(--brand);
+  color: #f8fbff;
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.text-brand {
+  color: var(--brand);
+}
+
+.bg-brand {
+  background-color: var(--brand);
+}
+
+.bg-brand-soft {
+  background-color: var(--brand-soft);
+}
+
+.border-brand {
+  border-color: var(--brand-border);
+}
+
+.hover\:text-foreground:hover,
+.group:hover .group-hover\:text-foreground,
+.group:hover .group-hover\:text-muted-foreground {
+  color: var(--brand);
+}
+
+.hover\:border-border:hover,
+.hover\:border-border\/80:hover,
+.hover\:border-muted-foreground\/60:hover,
+.group:hover .group-hover\:border-border,
+.group:hover .group-hover\:border-border\/80 {
+  border-color: var(--brand-border);
+}
+
+.hover\:bg-muted\/20:hover,
+.hover\:bg-muted\/40:hover,
+.hover\:bg-muted\/50:hover,
+.group:hover .group-hover\:bg-muted\/40,
+.group:hover .group-hover\:bg-muted\/50 {
+  background-color: var(--brand-soft);
+}
+
+.hover\:decoration-border:hover {
+  text-decoration-color: var(--brand-border);
 }

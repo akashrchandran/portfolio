@@ -24,6 +24,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+# cloudflare worker local config
+workers/lead-api/wrangler.toml
+workers/lead-api/.wrangler/
+
 # OS
 .DS_Store
 Thumbs.db

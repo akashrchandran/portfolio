@@ -1,0 +1,15 @@
+name = "portfolio-lead-api"
+main = "index.ts"
+compatibility_date = "2026-04-19"
+
+[vars]
+CORS_ORIGINS = "https://your-domain.com,http://localhost:3000,http://localhost:4321,http://localhost:5173"
+RESEND_FROM = "Your Name <noreply@your-domain.com>"
+RESUME_URL = "https://your-domain.com/resume.pdf"
+RESUME_SUBJECT = "My Resume"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-leads"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"

@@ -3,14 +3,11 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import BlogPagination from '../../../components/BlogPagination.astro';
-import { getSortedPosts } from '../../../lib/hashnode/client';
-import { formatMonthYear } from '../../../lib/date/format-date';
+import BlogPostGrid from '../../../components/BlogPostGrid.astro';
+import { BLOG_PAGE_SIZE, getBlogListingData, getPostsForPage } from '../../../lib/hashnode/client';
 
 export async function getStaticPaths() {
-  const pageSize = 6;
-  const allPosts = await getSortedPosts();
-  const totalPages = Math.ceil(allPosts.length / pageSize);
-  const featuredCount = allPosts.filter((post) => post.featured).length;
+  const { allPosts, totalPages, featuredCount } = await getBlogListingData(BLOG_PAGE_SIZE);
 
   if (totalPages <= 1) {
     return [];
@@ -18,8 +15,7 @@ export async function getStaticPaths() {
 
   return Array.from({ length: totalPages - 1 }, (_, index) => {
     const currentPage = index + 2;
-    const startIndex = (currentPage - 1) * pageSize;
-    const posts = allPosts.slice(startIndex, startIndex + pageSize);
+    const posts = getPostsForPage(allPosts, currentPage, BLOG_PAGE_SIZE);
 
     return {
       params: { page: String(currentPage) },
@@ -59,59 +55,7 @@ const { posts, currentPage, totalPages, featuredCount } = Astro.props;
           ) : null}
         </div>
 
-        <div class="grid gap-6 md:grid-cols-2">
-          {posts.length ? (
-            posts.map((post) => (
-              <a href={`/blog/${post.slug}`} class="group block">
-                <article class="h-full p-6 sm:p-7 border border-border/40 rounded-xl hover:border-border transition-all duration-300 hover:bg-muted/20 space-y-4">
-                  {post.coverImage?.url ? (
-                    <img
-                      src={post.coverImage.url}
-                      alt={post.title}
-                      loading="lazy"
-                      class="w-full aspect-[16/9] object-cover rounded-xl border border-border/40"
-                    />
-                  ) : null}
-
-                  <div class="space-y-3">
-                    <div class="flex items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
-                      <span>{formatMonthYear(post.publishedAt)}</span>
-                      <span>{post.readTimeInMinutes} min</span>
-                    </div>
-
-                    <div class="flex items-start justify-between gap-3">
-                      <h2 class="text-xl sm:text-2xl font-medium group-hover:text-muted-foreground transition-colors duration-300 leading-tight">
-                        {post.title}
-                      </h2>
-                      {post.featured ? (
-                        <span class="px-2.5 py-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 rounded-full shrink-0">
-                          Featured
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <p class="text-muted-foreground text-sm leading-relaxed">
-                      {post.brief || post.subtitle || 'Read the full article for implementation details and engineering trade-offs.'}
-                    </p>
-
-                    <div class="flex flex-wrap gap-3 items-center pt-1">
-                      {post.tags?.[0]?.name ? (
-                        <span class="px-2.5 py-1 text-xs text-muted-foreground bg-muted/20 rounded-full">
-                          {post.tags[0].name}
-                        </span>
-                      ) : null}
-                      <span class="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300">Read →</span>
-                    </div>
-                  </div>
-                </article>
-              </a>
-            ))
-          ) : (
-            <div class="md:col-span-2 p-6 sm:p-8 border border-border/40 rounded-xl text-sm text-muted-foreground">
-              No posts found on this page.
-            </div>
-          )}
-        </div>
+        <BlogPostGrid posts={posts} emptyMessage="No posts found on this page." />
 
         <BlogPagination currentPage={currentPage} totalPages={totalPages} />
 

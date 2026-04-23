@@ -1,0 +1,67 @@
+---
+import { formatMonthYear } from '../lib/date/format-date';
+import type { HashnodePost } from '../lib/hashnode/schema';
+
+interface Props {
+  posts: HashnodePost[];
+  emptyMessage: string;
+}
+
+const { posts, emptyMessage } = Astro.props;
+---
+
+<div class="grid gap-6 md:grid-cols-2">
+  {posts.length ? (
+    posts.map((post) => (
+      <a href={`/blog/${post.slug}`} class="group block">
+        <article class="h-full p-6 sm:p-7 border border-border/40 rounded-xl hover:border-border transition-all duration-300 hover:bg-muted/20 space-y-4">
+          {post.coverImage?.url ? (
+            <img
+              src={post.coverImage.url}
+              alt={post.title}
+              loading="lazy"
+              class="w-full aspect-[16/9] object-cover rounded-xl border border-border/40"
+            />
+          ) : null}
+
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
+              <span>{formatMonthYear(post.publishedAt)}</span>
+              <span>{post.readTimeInMinutes} min</span>
+            </div>
+
+            <div class="flex items-start justify-between gap-3">
+              <h2 class="text-xl sm:text-2xl font-medium group-hover:text-muted-foreground transition-colors duration-300 leading-tight">
+                {post.title}
+              </h2>
+              {post.featured ? (
+                <span class="px-2.5 py-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 rounded-full shrink-0">
+                  Featured
+                </span>
+              ) : null}
+            </div>
+
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              {post.brief || post.subtitle || 'Read the full article for implementation details and engineering trade-offs.'}
+            </p>
+
+            <div class="flex flex-wrap gap-2 items-center pt-1">
+              {post.tags?.length ? (
+                post.tags.map((tag) => (
+                  <span class="px-2.5 py-1 text-xs text-muted-foreground bg-muted/20 rounded-full">
+                    {tag.name}
+                  </span>
+                ))
+              ) : null}
+              <span class="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300">Read →</span>
+            </div>
+          </div>
+        </article>
+      </a>
+    ))
+  ) : (
+    <div class="md:col-span-2 p-6 sm:p-8 border border-border/40 rounded-xl text-sm text-muted-foreground">
+      {emptyMessage}
+    </div>
+  )}
+</div>

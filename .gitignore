@@ -31,3 +31,4 @@ workers/lead-api/.wrangler/
 # OS
 .DS_Store
 Thumbs.db
+workers/lead-api/.dev.vars

@@ -2,59 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { projects } from '../data/site-data';
-import { getAllPosts } from '../lib/hashnode/client';
+import { projects, workExperience, socialLinks, techStack, focusAreas } from '../data/site-data';
+import { getSortedPosts } from '../lib/hashnode/client';
+import { formatMonthYear } from '../lib/date/format-date';
 
 const featuredProjects = projects.filter((p) => p.featured);
-const hashnodePosts = await getAllPosts();
-const recentPosts = [...hashnodePosts]
-  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-  .slice(0, 4);
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) {
-    return dateString;
-  }
-
-  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-};
-
-const workExperience = [
-  {
-    year: "2024",
-    role: "Backend Engineer",
-    company: "Litmus7 Systems Consulting Pvt Ltd",
-    description: "Built secure Spring Boot APIs with Keycloak and Spring Security, and architected ETL and workflow systems using Spring Batch and Temporal.",
-    tech: ["Spring Boot", "Keycloak", "MongoDB", "Spring Batch", "Postgres"],
-  },
-  {
-    year: "2023",
-    endYear: "2023",
-    role: "Back End Developer",
-    company: "GTech Mulearn",
-    description: "Engineered and maintained Django REST Framework APIs and MySQL-backed data models for core platform workflows.",
-    tech: ["Django REST Framework", "MySQL", "Python"],
-  },
-];
-
-const socialLinks = [
-  { name: "GitHub", url: "https://github.com/akashrchandran" },
-  { name: "LinkedIn", url: "https://linkedin.com/in/akashrchandran" },
-  { name: "Email", url: "mailto:chandranrakash@gmail.com" },
-  { name: "Phone", url: "tel:+919511807104" },
-  { name: "Twitter", url: "https://twitter.com/akas__h" },
-  { name: "Resume", url: "/akash_r_chandran_resume.pdf" },
-];
-
-const techStack = ["Java", "Python", "SQL", "JavaScript", "Spring Boot", "Spring Security", "Django REST Framework", "FastAPI", "PostgreSQL", "MongoDB", "Kafka", "Temporal", "Docker", "GCP"];
-
-const focusAreas = [
-  "Building fast, reliable, and secure backend systems",
-  "Designing microservices and high-volume data workflows",
-  "Reducing database load to improve overall system speed",
-  "Automating background processing for resilient operations",
-];
+const hashnodePosts = await getSortedPosts();
+const recentPosts = hashnodePosts.slice(0, 4);
+const leadsApiUrl = import.meta.env.PUBLIC_LEADS_API_URL?.trim() ?? '';
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? '';
 ---
 
 <BaseLayout title="Akash R Chandran — Backend Engineer" description="Backend Engineer focused on building fast, reliable, and secure backend systems at production scale.">
@@ -99,9 +55,9 @@ const focusAreas = [
             </div>
 
             <div class="flex flex-wrap gap-3 pt-2">
-              <a href="/projects" class="px-5 py-2.5 rounded-lg border border-brand bg-brand text-sm text-white transition-all duration-300 hover:bg-[color:var(--brand-hover)] shadow-[0_0_24px_-12px_var(--brand-glow)] hover:shadow-[0_0_28px_-10px_var(--brand-glow)]">
-                View projects
-              </a>
+              <button id="openLeadModal" type="button" class="px-5 py-2.5 rounded-lg border border-brand bg-brand text-sm text-white transition-all duration-300 hover:bg-[color:var(--brand-hover)] shadow-[0_0_24px_-12px_var(--brand-glow)] hover:shadow-[0_0_28px_-10px_var(--brand-glow)]">
+                View Resume
+              </button>
               <a href="#connect" class="px-5 py-2.5 rounded-lg border border-brand bg-brand-soft hover:bg-[color:var(--brand-soft-strong)] transition-all duration-300 text-sm text-brand">
                 Contact
               </a>
@@ -135,7 +91,7 @@ const focusAreas = [
       <!-- Work Experience -->
       <section
         id="work"
-        class="py-20 sm:py-32 opacity-0 animate-section"
+        class="pt-20 sm:pt-32 opacity-0 animate-section"
       >
         <div class="space-y-12 sm:space-y-16">
           <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -176,7 +132,7 @@ const focusAreas = [
       <!-- Featured Projects -->
       <section
         id="projects"
-        class="py-20 sm:py-32 opacity-0 animate-section"
+        class="pt-20 sm:pt-32 opacity-0 animate-section"
       >
         <div class="space-y-12 sm:space-y-16">
           <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -242,7 +198,7 @@ const focusAreas = [
       <!-- Blog / Thoughts -->
       <section
         id="thoughts"
-        class="py-20 sm:py-32 opacity-0 animate-section"
+        class="pt-20 sm:pt-32 opacity-0 animate-section"
       >
         <div class="space-y-12 sm:space-y-16">
           <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -259,7 +215,7 @@ const focusAreas = [
                   <article class="h-full p-6 sm:p-8 border border-border/40 rounded-xl hover:border-border transition-all duration-300 hover:shadow-md cursor-pointer hover:bg-muted/20 space-y-4">
                     <div class="space-y-4">
                       <div class="flex items-center justify-between text-xs text-muted-foreground font-mono">
-                        <span>{formatDate(post.publishedAt)}</span>
+                        <span>{formatMonthYear(post.publishedAt)}</span>
                         <span>{post.readTimeInMinutes} min</span>
                       </div>
 
@@ -301,7 +257,7 @@ const focusAreas = [
       </section>
 
       <!-- Contact -->
-      <section id="connect" class="py-20 sm:py-32 opacity-0 animate-section">
+      <section id="connect" class="pt-20 sm:pt-32 pb-16 sm:pb-20 opacity-0 animate-section">
         <div class="max-w-2xl space-y-12">
           <div class="space-y-6">
             <h2 class="text-4xl sm:text-5xl font-light tracking-tight">Let's <span class="text-brand">Connect</span></h2>
@@ -339,13 +295,79 @@ const focusAreas = [
                 </a>
               ))}
             </div>
+
           </div>
         </div>
       </section>
 
       <Footer />
+
+      <div id="leadModal" data-leads-api-url={leadsApiUrl} data-turnstile-site-key={turnstileSiteKey} class="fixed inset-0 z-50 hidden pointer-events-none" aria-hidden="true">
+        <div id="leadModalBackdrop" class="absolute inset-0 bg-background/75 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        <div class="relative z-10 min-h-screen px-4 py-6 sm:py-12 flex items-center justify-center">
+          <div id="leadModalPanel" class="w-full max-w-md rounded-2xl border border-border/60 bg-background/70 backdrop-blur-xl p-5 sm:p-6 shadow-[0_0_40px_-20px_var(--brand-glow)] space-y-5 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 transition-all duration-300">
+            <div class="flex items-center justify-between gap-4">
+              <h3 class="text-xl font-medium tracking-tight">📄 Get Resume</h3>
+              <button id="closeLeadModal" type="button" aria-label="Close modal" class="p-2 rounded border border-border/40 hover:border-border transition-colors duration-300 text-muted-foreground hover:text-foreground">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6l-12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p class="text-sm text-muted-foreground">Share your details and why you need the resume. I’ll send the download link to your inbox.</p>
+
+            <form id="leadForm" class="space-y-4" autocomplete="off">
+              <div class="space-y-2">
+                <label for="leadName" class="text-sm text-muted-foreground">Name <span class="text-xs text-muted-foreground/80">(Optional)</span></label>
+                <input id="leadName" name="name" type="text" maxlength="100" class="w-full rounded-lg border border-border/50 bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none focus:border-brand" />
+              </div>
+
+              <div class="space-y-2">
+                <label for="leadEmail" class="text-sm text-muted-foreground">Email <span class="text-xs text-muted-foreground/80">(Required)</span></label>
+                <input id="leadEmail" name="email" type="email" required class="w-full rounded-lg border border-border/50 bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none focus:border-brand" />
+              </div>
+
+              <div class="space-y-2">
+                <label for="leadReason" class="text-sm text-muted-foreground">Reason for download <span class="text-xs text-muted-foreground/80">(Required)</span></label>
+                <textarea
+                  id="leadReason"
+                  name="reason"
+                  required
+                  maxlength="280"
+                  rows="3"
+                  placeholder="Example: I want to review your backend experience for an open role."
+                  class="w-full resize-none rounded-lg border border-border/50 bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none focus:border-brand"
+                ></textarea>
+              </div>
+
+              {turnstileSiteKey ? (
+                <div class="space-y-2">
+                  <p class="text-sm text-muted-foreground">Captcha <span class="text-xs text-muted-foreground/80">(Required)</span></p>
+                  <div id="turnstileWidget" class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="auto"></div>
+                </div>
+              ) : (
+                <p class="text-sm text-foreground">Captcha is unavailable. Please configure Turnstile.</p>
+              )}
+
+              <p id="leadFormMessage" class="text-sm text-muted-foreground" role="status" aria-live="polite"></p>
+
+              <button id="leadSubmitBtn" type="submit" class="w-full px-5 py-2.5 rounded-lg border border-brand bg-brand text-sm text-white transition-all duration-300 hover:bg-[color:var(--brand-hover)] disabled:opacity-60 disabled:cursor-not-allowed">
+                Send Resume Link
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
+{turnstileSiteKey ? (
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
+) : null}
 
   <!-- Section reveal animation -->
   <script>
@@ -362,6 +384,163 @@ const focusAreas = [
 
     document.querySelectorAll('.animate-section').forEach((section) => {
       observer.observe(section);
+    });
+
+    const leadModal = document.getElementById('leadModal') as HTMLDivElement | null;
+    const openLeadModalButtons = Array.from(
+      document.querySelectorAll('[data-open-lead-modal], #openLeadModal')
+    ) as HTMLButtonElement[];
+    const closeLeadModalButton = document.getElementById('closeLeadModal') as HTMLButtonElement | null;
+    const leadModalBackdrop = document.getElementById('leadModalBackdrop') as HTMLDivElement | null;
+    const leadModalPanel = document.getElementById('leadModalPanel') as HTMLDivElement | null;
+    const leadForm = document.getElementById('leadForm') as HTMLFormElement | null;
+    const leadFormMessage = document.getElementById('leadFormMessage') as HTMLParagraphElement | null;
+    const leadSubmitButton = document.getElementById('leadSubmitBtn') as HTMLButtonElement | null;
+    const leadNameInput = document.getElementById('leadName') as HTMLInputElement | null;
+    const turnstileWidget = document.getElementById('turnstileWidget') as HTMLDivElement | null;
+    const leadsApiUrl = leadModal?.getAttribute('data-leads-api-url')?.trim() ?? '';
+    const turnstileSiteKey = leadModal?.getAttribute('data-turnstile-site-key')?.trim() ?? '';
+    let isLeadModalClosing = false;
+    let leadModalCloseTimeout: number | null = null;
+
+    const openLeadModal = () => {
+      if (!leadModal) return;
+
+      if (leadModalCloseTimeout !== null) {
+        window.clearTimeout(leadModalCloseTimeout);
+        leadModalCloseTimeout = null;
+      }
+
+      isLeadModalClosing = false;
+      leadModal.classList.remove('hidden');
+      leadModal.classList.remove('pointer-events-none');
+      leadModal.setAttribute('aria-hidden', 'false');
+
+      leadModalBackdrop?.classList.add('opacity-0');
+      leadModalBackdrop?.classList.remove('opacity-100');
+      leadModalPanel?.classList.add('opacity-0', 'translate-y-4', 'sm:scale-95');
+      leadModalPanel?.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+
+      leadModalPanel?.getBoundingClientRect();
+
+      requestAnimationFrame(() => {
+        leadModalBackdrop?.classList.remove('opacity-0');
+        leadModalBackdrop?.classList.add('opacity-100');
+        leadModalPanel?.classList.remove('opacity-0', 'translate-y-4', 'sm:scale-95');
+        leadModalPanel?.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
+      });
+      setTimeout(() => leadNameInput?.focus(), 80);
+    };
+
+    const closeLeadModal = () => {
+      if (!leadModal || isLeadModalClosing) return;
+      isLeadModalClosing = true;
+      leadModalBackdrop?.classList.add('opacity-0');
+      leadModalBackdrop?.classList.remove('opacity-100');
+      leadModalPanel?.classList.add('opacity-0', 'translate-y-4', 'sm:scale-95');
+      leadModalPanel?.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+      leadModal.classList.add('pointer-events-none');
+
+      leadModalCloseTimeout = window.setTimeout(() => {
+        leadModal.classList.add('hidden');
+        leadModal.setAttribute('aria-hidden', 'true');
+        isLeadModalClosing = false;
+        leadModalCloseTimeout = null;
+      }, 300);
+
+      if (leadFormMessage) {
+        leadFormMessage.textContent = '';
+      }
+
+      const turnstile = (window as Window & {
+        turnstile?: { reset: (widget?: string | HTMLElement) => void };
+      }).turnstile;
+      if (turnstile && turnstileWidget) {
+        turnstile.reset(turnstileWidget);
+      }
+    };
+
+    openLeadModalButtons.forEach((button) => {
+      button.addEventListener('click', openLeadModal);
+    });
+    closeLeadModalButton?.addEventListener('click', closeLeadModal);
+    leadModalBackdrop?.addEventListener('click', closeLeadModal);
+    leadModal?.addEventListener('click', (event) => {
+      const target = event.target as Node | null;
+      if (leadModalPanel && target && !leadModalPanel.contains(target)) {
+        closeLeadModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && leadModal && !leadModal.classList.contains('hidden')) {
+        closeLeadModal();
+      }
+    });
+
+    leadForm?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!leadFormMessage || !leadSubmitButton) return;
+
+      if (!leadsApiUrl) {
+        leadFormMessage.className = 'text-sm text-brand bg-brand-soft border border-brand rounded-md px-3 py-2';
+        leadFormMessage.textContent = 'Form is unavailable right now. Please try again later.';
+        return;
+      }
+
+      if (!turnstileSiteKey) {
+        leadFormMessage.className = 'text-sm text-brand bg-brand-soft border border-brand rounded-md px-3 py-2';
+        leadFormMessage.textContent = 'Captcha is unavailable. Please try again later.';
+        return;
+      }
+
+      const formData = new FormData(leadForm);
+      const name = String(formData.get('name') ?? '').trim();
+      const email = String(formData.get('email') ?? '').trim();
+      const reason = String(formData.get('reason') ?? '').trim();
+      const turnstileToken = String(formData.get('cf-turnstile-response') ?? '').trim();
+
+      if (!turnstileToken) {
+        leadFormMessage.className = 'text-sm text-brand bg-brand-soft border border-brand rounded-md px-3 py-2';
+        leadFormMessage.textContent = 'Please complete the captcha verification.';
+        return;
+      }
+
+      leadSubmitButton.setAttribute('disabled', 'true');
+      leadFormMessage.className = 'text-sm text-muted-foreground';
+      leadFormMessage.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(leadsApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            reason,
+            consent: true,
+            turnstileToken,
+          }),
+        });
+
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+
+        if (!response.ok) {
+          const message = typeof data?.error === 'string' ? data.error : 'Failed to submit. Please try again.';
+          throw new Error(message);
+        }
+
+        leadFormMessage.className = 'text-sm text-brand';
+        leadFormMessage.textContent = 'Success! Check your email for the resume link.';
+      } catch (error) {
+        leadFormMessage.className = 'text-sm text-brand bg-brand-soft border border-brand rounded-md px-3 py-2';
+        leadFormMessage.textContent = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      } finally {
+        leadSubmitButton.removeAttribute('disabled');
+      }
     });
   </script>
 </BaseLayout>

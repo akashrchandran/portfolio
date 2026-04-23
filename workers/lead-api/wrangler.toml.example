@@ -1,6 +1,12 @@
 name = "portfolio-lead-api"
 main = "index.ts"
 compatibility_date = "2026-04-19"
+workers_dev = false
+preview_urls = false
+
+routes = [
+	{ pattern = "lead-api.your-domain.com", custom_domain = true }
+]
 
 [vars]
 CORS_ORIGINS = "https://your-domain.com,http://localhost:3000,http://localhost:4321,http://localhost:5173"

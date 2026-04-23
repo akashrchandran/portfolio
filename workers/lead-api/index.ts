@@ -15,6 +15,8 @@ interface Env {
 type LeadRequest = {
   email: string;
   name?: string;
+  reason: string;
+  turnstileToken?: string;
   consent: boolean;
 };
 
@@ -132,7 +134,7 @@ function jsonResponse(
 }
 
 async function verifyWithAbstract(email: string, apiKey: string): Promise<void> {
-  const url = new URL("https://emailvalidation.abstractapi.com/v1/");
+  const url = new URL("https://emailreputation.abstractapi.com/v1/");
   url.searchParams.set("api_key", apiKey);
   url.searchParams.set("email", email);
 
@@ -191,6 +193,8 @@ function isValidLeadPayload(payload: unknown): payload is LeadRequest {
   return (
     typeof p.email === "string" &&
     (p.name === undefined || typeof p.name === "string") &&
+    typeof p.reason === "string" &&
+    (p.turnstileToken === undefined || typeof p.turnstileToken === "string") &&
     typeof p.consent === "boolean"
   );
 }
@@ -247,6 +251,7 @@ export default {
 
       const email = body.email.trim().toLowerCase();
       const name = typeof body.name === "string" ? body.name.trim() : null;
+      const reason = body.reason.trim();
       const consent = body.consent;
 
       if (!email || !EMAIL_REGEX.test(email)) {
@@ -261,6 +266,14 @@ export default {
         return jsonResponse({ error: "Name is too long." }, 400, corsHeaders);
       }
 
+      if (!reason) {
+        return jsonResponse({ error: "Reason is required." }, 400, corsHeaders);
+      }
+
+      if (reason.length > 280) {
+        return jsonResponse({ error: "Reason is too long." }, 400, corsHeaders);
+      }
+
       if (isDisposableEmail(email)) {
         return jsonResponse({ error: "Disposable email addresses are not allowed." }, 400, corsHeaders);
       }
@@ -273,9 +286,9 @@ export default {
 
       if (!existing) {
         await env.DB.prepare(
-          "INSERT INTO leads (email, name, consent) VALUES (?, ?, ?)"
+          "INSERT INTO leads (email, name, reason, consent) VALUES (?, ?, ?, ?)"
         )
-          .bind(email, name, consent ? 1 : 0)
+          .bind(email, name, reason, consent ? 1 : 0)
           .run();
 
         await sendResumeEmail(email, env.RESEND_API_KEY, config);

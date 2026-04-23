@@ -12,6 +12,7 @@ routes = [
 CORS_ORIGINS = "https://your-domain.com,http://localhost:3000,http://localhost:4321,http://localhost:5173"
 RESEND_FROM = "Your Name <noreply@your-domain.com>"
 RESUME_URL = "https://your-domain.com/resume.pdf"
+RESUME_TOKEN_SECRET = "REPLACE_WITH_LONG_RANDOM_SECRET"
 RESUME_SUBJECT = "My Resume"
 
 [[d1_databases]]

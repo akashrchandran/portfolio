@@ -9,6 +9,7 @@ interface Env {
   CORS_ORIGINS: string;
   RESEND_FROM: string;
   RESUME_URL: string;
+  RESUME_TOKEN_SECRET: string;
   RESUME_SUBJECT?: string;
 }
 
@@ -28,6 +29,7 @@ type AbstractEmailResponse = {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_RESUME_SUBJECT = "My Resume";
+const RESUME_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
 
 type AppConfig = {
   allowedOrigins: Set<string>;
@@ -105,6 +107,90 @@ function getConfig(env: Env): AppConfig {
   };
 }
 
+function getResumeTokenSecret(env: Env): string {
+  const secret = env.RESUME_TOKEN_SECRET?.trim();
+  if (!secret) {
+    throw new HttpError("Server misconfiguration: RESUME_TOKEN_SECRET is missing.", 500);
+  }
+  return secret;
+}
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function base64UrlDecodeToBytes(value: string): ArrayBuffer {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+async function signToken(payload: string, secret: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
+  return base64UrlEncode(new Uint8Array(signature));
+}
+
+async function verifyTokenSignature(payload: string, signature: string, secret: string): Promise<boolean> {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["verify"]
+  );
+  const sigBuffer = base64UrlDecodeToBytes(signature);
+  return crypto.subtle.verify("HMAC", key, sigBuffer, new TextEncoder().encode(payload));
+}
+
+async function createResumeToken(leadId: number, secret: string): Promise<string> {
+  const expiresAt = Math.floor(Date.now() / 1000) + RESUME_TOKEN_TTL_SECONDS;
+  const nonceBytes = new Uint8Array(16);
+  crypto.getRandomValues(nonceBytes);
+  const nonce = base64UrlEncode(nonceBytes);
+  const payload = `${leadId}.${expiresAt}.${nonce}`;
+  const signature = await signToken(payload, secret);
+  return `${base64UrlEncode(new TextEncoder().encode(payload))}.${signature}`;
+}
+
+async function parseResumeToken(
+  token: string,
+  secret: string
+): Promise<{ leadId: number; expiresAt: number } | null> {
+  const parts = token.split(".");
+  if (parts.length !== 2) return null;
+
+  const payloadBytes = base64UrlDecodeToBytes(parts[0]);
+  const payload = new TextDecoder().decode(new Uint8Array(payloadBytes));
+  const [leadIdRaw, expiresAtRaw] = payload.split(".");
+  const leadId = Number(leadIdRaw);
+  const expiresAt = Number(expiresAtRaw);
+
+  if (!Number.isFinite(leadId) || !Number.isFinite(expiresAt)) return null;
+
+  const valid = await verifyTokenSignature(payload, parts[1], secret);
+  if (!valid) return null;
+
+  if (Math.floor(Date.now() / 1000) > expiresAt) return null;
+
+  return { leadId, expiresAt };
+}
+
 function getCorsHeaders(origin: string | null, config: AppConfig): Headers {
   const headers = new Headers();
 
@@ -162,9 +248,14 @@ async function verifyWithAbstract(email: string, apiKey: string): Promise<void> 
   }
 }
 
-async function sendResumeEmail(email: string, apiKey: string, config: AppConfig): Promise<void> {
-  const html = `<p>Hi,</p><p>Thanks for your interest. You can download my resume using the link below:</p><p><a href="${config.resumeUrl}">Download Resume (PDF)</a></p><p>Best regards,<br/>Akash R Chandran</p>`;
-
+async function sendResumeEmail(
+  email: string,
+  name: string | null,
+  apiKey: string,
+  config: AppConfig,
+  viewUrl: string,
+  downloadUrl: string
+): Promise<void> {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -175,7 +266,12 @@ async function sendResumeEmail(email: string, apiKey: string, config: AppConfig)
       from: config.resendFrom,
       to: [email],
       subject: config.resumeSubject,
-      html,
+      template_id: "send_resume",
+      variables: {
+        name: name || "there",
+        preview_link: viewUrl,
+        download_link: downloadUrl,
+      },
     }),
     signal: AbortSignal.timeout(8000),
   });
@@ -183,6 +279,91 @@ async function sendResumeEmail(email: string, apiKey: string, config: AppConfig)
   if (!response.ok) {
     throw new HttpError("Failed to send resume email.", 502);
   }
+}
+
+async function logResumeAction(
+  db: D1Database,
+  leadId: number,
+  action: "view" | "download"
+): Promise<void> {
+  if (action === "view") {
+    await db
+      .prepare("UPDATE leads SET resume_viewed_at = datetime('now') WHERE id = ?")
+      .bind(leadId)
+      .run();
+    return;
+  }
+
+  await db
+    .prepare("UPDATE leads SET resume_downloaded_at = datetime('now') WHERE id = ?")
+    .bind(leadId)
+    .run();
+}
+
+async function proxyResumePdf(
+  request: Request,
+  config: AppConfig,
+  disposition: "inline" | "attachment"
+): Promise<Response> {
+  const upstream = await fetch(config.resumeUrl, {
+    method: "GET",
+    signal: AbortSignal.timeout(8000),
+  });
+
+  if (!upstream.ok || !upstream.body) {
+    return new Response("Resume unavailable.", { status: 502 });
+  }
+
+  const headers = new Headers();
+  const contentType = upstream.headers.get("Content-Type") || "application/pdf";
+  headers.set("Content-Type", contentType);
+  headers.set("Content-Disposition", `${disposition}; filename="resume.pdf"`);
+
+  const cacheControl = upstream.headers.get("Cache-Control");
+  if (cacheControl) {
+    headers.set("Cache-Control", cacheControl);
+  }
+
+  return new Response(upstream.body, {
+    status: 200,
+    headers,
+  });
+}
+
+async function handleResumeRequest(
+  request: Request,
+  env: Env,
+  config: AppConfig
+): Promise<Response> {
+  const url = new URL(request.url);
+  const [, token, action] = url.pathname.split("/").filter(Boolean);
+
+  if (!token) {
+    return new Response("Invalid resume link.", { status: 400 });
+  }
+
+  if (!action) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: `/r/${token}/view`,
+      },
+    });
+  }
+
+  if (action !== "view" && action !== "download") {
+    return new Response("Invalid resume link.", { status: 404 });
+  }
+
+  const secret = getResumeTokenSecret(env);
+  const payload = await parseResumeToken(token, secret);
+  if (!payload) {
+    return new Response("Resume link expired or invalid.", { status: 410 });
+  }
+
+  await logResumeAction(env.DB, payload.leadId, action);
+
+  return proxyResumePdf(request, config, action === "view" ? "inline" : "attachment");
 }
 
 function isValidLeadPayload(payload: unknown): payload is LeadRequest {
@@ -202,6 +383,7 @@ function isValidLeadPayload(payload: unknown): payload is LeadRequest {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const origin = normalizeOrigin(request.headers.get("Origin"));
+    const url = new URL(request.url);
     let corsHeaders = new Headers({
       "Access-Control-Allow-Origin": origin ?? "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -212,6 +394,10 @@ export default {
     try {
       const config = getConfig(env);
       corsHeaders = getCorsHeaders(origin, config);
+
+      if (request.method === "GET" && url.pathname.startsWith("/r/")) {
+        return handleResumeRequest(request, env, config);
+      }
 
       if (request.method === "OPTIONS") {
         if (origin && !config.allowedOrigins.has(origin)) {
@@ -285,13 +471,18 @@ export default {
         .first();
 
       if (!existing) {
-        await env.DB.prepare(
+        const insertResult = await env.DB.prepare(
           "INSERT INTO leads (email, name, reason, consent) VALUES (?, ?, ?, ?)"
         )
           .bind(email, name, reason, consent ? 1 : 0)
           .run();
 
-        await sendResumeEmail(email, env.RESEND_API_KEY, config);
+        const leadId = Number(insertResult.meta?.last_row_id);
+        const resumeToken = await createResumeToken(leadId, getResumeTokenSecret(env));
+        const baseUrl = new URL(request.url).origin;
+        const viewUrl = `${baseUrl}/r/${resumeToken}/view`;
+        const downloadUrl = `${baseUrl}/r/${resumeToken}/download`;
+        await sendResumeEmail(email, name, env.RESEND_API_KEY, config, viewUrl, downloadUrl);
       }
 
       return jsonResponse({ success: true }, 200, corsHeaders);

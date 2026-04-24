@@ -13,7 +13,7 @@ CORS_ORIGINS = "https://your-domain.com,http://localhost:3000,http://localhost:4
 RESEND_FROM = "Your Name <noreply@your-domain.com>"
 RESUME_URL = "https://your-domain.com/resume.pdf"
 RESUME_TOKEN_SECRET = "REPLACE_WITH_LONG_RANDOM_SECRET"
-RESUME_SUBJECT = "My Resume"
+RESUME_TEMPLATE_ID = "template-id"
 
 [[d1_databases]]
 binding = "DB"

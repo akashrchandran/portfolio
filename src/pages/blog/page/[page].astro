@@ -30,12 +30,14 @@ export async function getStaticPaths() {
 }
 
 const { posts, currentPage, totalPages, featuredCount } = Astro.props;
+const blogCanonicalOrigin = 'https://blog.akashrchandran.in';
 
 ---
 
 <BaseLayout
   title={`Blog — Page ${currentPage} — Akash R Chandran`}
   description="Notes on backend engineering: APIs, data systems, reliability, and production operations."
+  canonicalUrl={`${blogCanonicalOrigin}/page/${currentPage}`}
 >
   <Header />
 

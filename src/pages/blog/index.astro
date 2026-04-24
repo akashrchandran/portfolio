@@ -8,11 +8,13 @@ import { BLOG_PAGE_SIZE, getBlogListingData, getPostsForPage } from '../../lib/h
 
 const { allPosts, totalPages, featuredCount } = await getBlogListingData(BLOG_PAGE_SIZE);
 const posts = getPostsForPage(allPosts, 1, BLOG_PAGE_SIZE);
+const blogCanonicalOrigin = 'https://blog.akashrchandran.in';
 ---
 
 <BaseLayout 
   title="Blog — Akash R Chandran" 
   description="Notes on backend engineering: APIs, data systems, reliability, and production operations."
+  canonicalUrl={`${blogCanonicalOrigin}/`}
 >
   <Header />
 

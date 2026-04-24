@@ -33,6 +33,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const { prevPost, nextPost } = Astro.props as StaticPathProps;
 const post = slug ? await getPost(slug) : null;
+const blogCanonicalOrigin = 'https://blog.akashrchandran.in';
 
 if (!post) {
   throw new Error('Hashnode post not found. Check HASHNODE_PUBLICATION_HOST and slug values.');
@@ -42,6 +43,7 @@ if (!post) {
 <BaseLayout
   title={`${post.title} — Akash R Chandran`}
   description={post.brief || post.subtitle || 'Backend engineering article'}
+  canonicalUrl={`${blogCanonicalOrigin}/${post.slug}`}
   ogType="article"
   publishedTime={post.publishedAt}
   openGraphImage={post.coverImage?.url}

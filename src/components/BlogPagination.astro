@@ -1,0 +1,80 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+}
+
+const { currentPage, totalPages } = Astro.props;
+
+const toPageHref = (page: number) => (page === 1 ? '/blog' : `/blog/page/${page}`);
+
+const visiblePages: Array<number | string> = [];
+let lastAdded = 0;
+
+for (let page = 1; page <= totalPages; page++) {
+  const shouldShow =
+    page === 1 ||
+    page === totalPages ||
+    Math.abs(page - currentPage) <= 1;
+
+  if (!shouldShow) {
+    continue;
+  }
+
+  if (lastAdded > 0 && page - lastAdded > 1) {
+    visiblePages.push(`ellipsis-${page}`);
+  }
+
+  visiblePages.push(page);
+  lastAdded = page;
+}
+---
+
+{totalPages > 1 ? (
+  <nav class="flex flex-wrap items-center justify-center gap-2" aria-label="Blog pagination">
+    {currentPage > 1 ? (
+      <a
+        href={toPageHref(currentPage - 1)}
+        class="px-3 py-2 text-sm rounded-lg border border-border/40 hover:border-border text-muted-foreground hover:text-foreground transition-all duration-300"
+      >
+        ← Previous
+      </a>
+    ) : (
+      <span class="px-3 py-2 text-sm rounded-lg border border-border/20 text-muted-foreground/50 cursor-not-allowed">
+        ← Previous
+      </span>
+    )}
+
+    {visiblePages.map((item) =>
+      typeof item === 'number' ? (
+        <a
+          href={toPageHref(item)}
+          aria-current={item === currentPage ? 'page' : undefined}
+          class:list={[
+            'px-3 py-2 text-sm rounded-lg border transition-all duration-300',
+            item === currentPage
+              ? 'border-brand bg-brand-soft text-brand'
+              : 'border-border/40 hover:border-border text-muted-foreground hover:text-foreground',
+          ]}
+        >
+          {item}
+        </a>
+      ) : (
+        <span class="px-2 text-muted-foreground">…</span>
+      ),
+    )}
+
+    {currentPage < totalPages ? (
+      <a
+        href={toPageHref(currentPage + 1)}
+        class="px-3 py-2 text-sm rounded-lg border border-border/40 hover:border-border text-muted-foreground hover:text-foreground transition-all duration-300"
+      >
+        Next →
+      </a>
+    ) : (
+      <span class="px-3 py-2 text-sm rounded-lg border border-border/20 text-muted-foreground/50 cursor-not-allowed">
+        Next →
+      </span>
+    )}
+  </nav>
+) : null}

@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import BlogPagination from '../../../components/BlogPagination.astro';
+import BlogPostGrid from '../../../components/BlogPostGrid.astro';
+import { BLOG_PAGE_SIZE, getBlogListingData, getPostsForPage } from '../../../lib/hashnode/client';
+
+export async function getStaticPaths() {
+  const { allPosts, totalPages, featuredCount } = await getBlogListingData(BLOG_PAGE_SIZE);
+
+  if (totalPages <= 1) {
+    return [];
+  }
+
+  return Array.from({ length: totalPages - 1 }, (_, index) => {
+    const currentPage = index + 2;
+    const posts = getPostsForPage(allPosts, currentPage, BLOG_PAGE_SIZE);
+
+    return {
+      params: { page: String(currentPage) },
+      props: {
+        posts,
+        currentPage,
+        totalPages,
+        featuredCount,
+      },
+    };
+  });
+}
+
+const { posts, currentPage, totalPages, featuredCount } = Astro.props;
+
+---
+
+<BaseLayout
+  title={`Blog — Page ${currentPage} — Akash R Chandran`}
+  description="Notes on backend engineering: APIs, data systems, reliability, and production operations."
+>
+  <Header />
+
+  <main class="min-h-screen bg-background text-foreground pt-32">
+    <div class="max-w-6xl mx-auto px-6 sm:px-8">
+      <div class="space-y-12 sm:space-y-16">
+        <div class="space-y-4">
+          <h1 class="text-5xl sm:text-6xl font-light tracking-tight">Blog</h1>
+          <p class="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            Notes on backend engineering: APIs, data systems, reliability, and production operations.
+          </p>
+
+          {featuredCount > 0 ? (
+            <p class="text-xs text-muted-foreground font-mono tracking-widest">
+              {featuredCount} FEATURED POST{featuredCount > 1 ? 'S' : ''}
+            </p>
+          ) : null}
+        </div>
+
+        <BlogPostGrid posts={posts} emptyMessage="No posts found on this page." />
+
+        <BlogPagination currentPage={currentPage} totalPages={totalPages} />
+
+        <div class="pb-16">
+          <a href="/" class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+            ← Back to home
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

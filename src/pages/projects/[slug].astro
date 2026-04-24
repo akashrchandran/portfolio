@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { projects } from '../../data/site-data';
+import { fetchRawGitHubMarkdown } from '../../lib/github/fetch-raw-github-markdown';
+import { markdownToHtml } from '../../lib/markdown/markdown-to-html';
+
+export async function getStaticPaths() {
+  return projects
+    .filter((project) => Boolean(project.architecture?.sourceRawUrl?.trim()))
+    .map((project) => ({
+      params: { slug: project.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+const project = projects.find((item) => item.slug === slug);
+
+if (!project || !project.architecture?.sourceRawUrl) {
+  throw new Error('Architecture source URL not configured for this project.');
+}
+
+let architectureHtml = '';
+let fetchError: string | null = null;
+
+try {
+  const markdown = await fetchRawGitHubMarkdown(project.architecture.sourceRawUrl);
+  architectureHtml = await markdownToHtml(markdown);
+} catch (error) {
+  fetchError = error instanceof Error ? error.message : String(error);
+}
+---
+
+<BaseLayout
+  title={`${project.title} Architecture — Akash R Chandran`}
+  description={project.description}
+>
+  <Header />
+
+  <main class="min-h-screen bg-background text-foreground pt-32">
+    <div class="max-w-3xl mx-auto px-6 sm:px-8 space-y-10 pb-16">
+      <div class="space-y-4">
+        <a href="/projects" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+          <span aria-hidden="true">←</span>
+          Back to projects
+        </a>
+
+        <h1 class="text-4xl sm:text-5xl font-light tracking-tight leading-tight">
+          {project.title} Architecture
+        </h1>
+
+        <p class="text-muted-foreground leading-relaxed">{project.description}</p>
+      </div>
+
+      {fetchError ? (
+        <div class="p-6 sm:p-7 border border-border/40 rounded-xl space-y-3 text-sm text-muted-foreground">
+          <p>Could not load architecture document at build time.</p>
+          <p class="break-words">{fetchError}</p>
+          <a
+            href={project.architecture.sourceRawUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-foreground underline decoration-border/40 hover:decoration-border transition-colors duration-300"
+          >
+            Open source document
+          </a>
+        </div>
+      ) : (
+        <article>
+          <div class="space-y-6 text-muted-foreground leading-relaxed [&_h1]:text-3xl [&_h1]:font-light [&_h1]:text-foreground [&_h2]:text-2xl [&_h2]:font-light [&_h2]:text-foreground [&_h3]:text-xl [&_h3]:font-medium [&_h3]:text-foreground [&_a]:text-foreground [&_a]:underline [&_strong]:text-foreground [&_code]:text-foreground [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-border/40 [&_pre]:bg-muted/20 [&_pre]:p-4">
+            <Fragment set:html={architectureHtml} />
+          </div>
+        </article>
+      )}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

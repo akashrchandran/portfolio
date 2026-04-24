@@ -1,0 +1,167 @@
+---
+const sections = [
+  { id: "intro", label: "Home", href: "/#intro" },
+  { id: "work", label: "Work", href: "/#work" },
+  { id: "projects", label: "Projects", href: "/projects" },
+  { id: "thoughts", label: "Blog", href: "/blog" },
+  { id: "connect", label: "Contact", href: "/#connect" },
+];
+---
+
+<header class="fixed top-4 inset-x-0 z-50 px-4 sm:px-6">
+  <div class="max-w-6xl mx-auto rounded-2xl border border-border/40 bg-background/80 backdrop-blur-md">
+  <nav class="px-6 sm:px-8 py-4 flex items-center justify-between">
+    <a href="/" class="inline-flex items-center hover:opacity-70 transition-opacity duration-300" aria-label="Go to homepage">
+      <img
+        src="/logo-light.webp"
+        alt="Akash logo"
+        class="block dark:hidden h-6 md:h-7 w-auto select-none"
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        src="/logo-dark.webp"
+        alt="Akash logo"
+        class="hidden dark:block h-6 md:h-7 w-auto select-none"
+        loading="eager"
+        decoding="async"
+      />
+    </a>
+    
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8">
+      {sections.map((section) => (
+        <a
+          href={section.href}
+          class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 nav-link"
+          data-section={section.id}
+        >
+          {section.label}
+        </a>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- Theme toggle (desktop only) -->
+      <button
+        id="theme-toggle-desktop"
+        class="group hidden md:inline-flex p-2 rounded-lg border border-border/40 hover:border-border hover:bg-[color:var(--brand-soft)] transition-all duration-300"
+        aria-label="Toggle theme"
+      >
+        <!-- Sun icon (shown in dark mode) -->
+        <svg
+          class="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300 dark:block hidden"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg
+          class="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300 dark:hidden block"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+      </button>
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden p-2 rounded-lg border border-border/40 hover:border-border hover:bg-[color:var(--brand-soft)] transition-all duration-300"
+        aria-label="Toggle menu"
+      >
+        <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden border-t border-border/40 bg-background/95 backdrop-blur-md rounded-b-2xl">
+    <div class="px-6 py-4 flex flex-col gap-4">
+      {sections.map((section) => (
+        <a
+          href={section.href}
+          class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 py-2"
+        >
+          {section.label}
+        </a>
+      ))}
+
+      <button
+        id="theme-toggle-mobile"
+        class="text-left text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 py-2"
+        aria-label="Toggle theme"
+      >
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+  </div>
+</header>
+
+<script>
+  // Theme toggle
+  const mobileMenu = document.getElementById('mobile-menu');
+  const desktopThemeToggle = document.getElementById('theme-toggle-desktop');
+  const mobileThemeToggle = document.getElementById('theme-toggle-mobile');
+
+  const toggleTheme = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  };
+
+  desktopThemeToggle?.addEventListener('click', toggleTheme);
+  mobileThemeToggle?.addEventListener('click', () => {
+    toggleTheme();
+    mobileMenu?.classList.add('hidden');
+  });
+
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  mobileMenuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+
+  // Close mobile menu on link click
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+    });
+  });
+
+  // Active section tracking (only on homepage)
+  if (window.location.pathname === '/') {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            document.querySelectorAll('.nav-link').forEach(link => {
+              const linkSection = link.getAttribute('data-section');
+              if (linkSection === id) {
+                link.classList.remove('text-muted-foreground');
+                link.classList.add('text-brand', 'font-medium');
+              } else {
+                link.classList.add('text-muted-foreground');
+                link.classList.remove('text-brand', 'font-medium');
+              }
+            });
+          }
+        });
+      },
+      { threshold: 0.3, rootMargin: '0px 0px -20% 0px' }
+    );
+
+    document.querySelectorAll('section[id], header[id]').forEach(section => {
+      observer.observe(section);
+    });
+  }
+</script>

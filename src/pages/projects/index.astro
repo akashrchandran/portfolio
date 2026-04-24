@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { projects } from '../../data/site-data';
+
+const categories = [...new Set(projects.map((p) => p.category))];
+---
+
+<BaseLayout 
+  title="Projects — Akash R Chandran"
+  description="Backend systems and platform projects focused on reliability, scalability, and developer productivity."
+>
+  <Header />
+
+  <main class="min-h-screen bg-background text-foreground pt-32">
+    <div class="max-w-6xl mx-auto px-6 sm:px-8">
+      <div class="space-y-12 sm:space-y-16">
+        <!-- Header -->
+        <div class="space-y-4">
+          <h1 class="text-5xl sm:text-6xl font-light tracking-tight">Projects</h1>
+          <p class="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            Backend systems and platform projects focused on reliability, scalability, and engineering outcomes.
+          </p>
+        </div>
+
+        <!-- Category Filter (client-side interactive) -->
+        <div class="space-y-4">
+          <div class="text-sm text-muted-foreground font-mono tracking-widest">FILTER BY CATEGORY</div>
+          <div class="flex flex-wrap gap-2" id="category-filters">
+            <button
+              data-category="all"
+              class="category-btn active px-4 py-2 rounded-lg border transition-all duration-300 text-sm border-brand bg-brand-soft text-brand"
+            >
+              All Projects
+            </button>
+            {categories.map((category) => (
+              <button
+                data-category={category}
+                class="category-btn px-4 py-2 rounded-lg border transition-all duration-300 text-sm border-border/40 text-muted-foreground hover:border-border hover:text-foreground"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="grid gap-6 md:grid-cols-2" id="projects-grid">
+          {projects.map((project) => (
+            <div
+              class="project-card group p-6 sm:p-8 border border-border/40 rounded-xl hover:border-border transition-all duration-300 hover:bg-muted/20 space-y-4"
+              data-category={project.category}
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 space-y-2">
+                  <h3 class="text-xl font-medium group-hover:text-muted-foreground transition-colors duration-300">
+                    {project.title}
+                  </h3>
+                  <p class="text-sm text-muted-foreground leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  {project.impact?.length ? (
+                    <ul class="text-xs text-muted-foreground leading-relaxed space-y-1 list-disc ml-5 pt-1">
+                      {project.impact.slice(0, 3).map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+                {project.featured && (
+                  <div class="px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 rounded-full shrink-0">
+                    Featured
+                  </div>
+                )}
+              </div>
+
+              <!-- Technologies -->
+              <div class="flex flex-wrap gap-2">
+                {project.technologies.map((tech) => (
+                  <span class="px-2 py-1 text-xs bg-muted/30 rounded group-hover:bg-muted/50 transition-colors duration-300 text-muted-foreground">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Links -->
+              <div class="flex gap-2 pt-2">
+                {project.architecture?.sourceRawUrl && (
+                  <a
+                    href={`/projects/${project.slug}`}
+                    class="flex-1 px-4 py-2 text-sm rounded-lg border border-border/40 hover:border-border text-center text-muted-foreground hover:text-foreground transition-all duration-300"
+                  >
+                    Architecture
+                  </a>
+                )}
+                {project.link && (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 px-4 py-2 text-sm rounded-lg border border-border/40 hover:border-border text-center text-muted-foreground hover:text-foreground transition-all duration-300"
+                  >
+                    View Live
+                  </a>
+                )}
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 px-4 py-2 text-sm rounded-lg border border-border/40 hover:border-border text-center text-muted-foreground hover:text-foreground transition-all duration-300"
+                  >
+                    GitHub
+                  </a>
+                )}
+              </div>
+
+              {project.artifacts?.length ? (
+                <div class="flex flex-wrap gap-x-4 gap-y-2 pt-1 text-xs">
+                  {project.artifacts.map((artifact) => (
+                    <a
+                      href={artifact.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-muted-foreground hover:text-foreground underline decoration-border/40 hover:decoration-border transition-colors duration-300"
+                    >
+                      {artifact.label} ↗
+                    </a>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-12 space-y-4">
+          <p class="text-muted-foreground">No projects found in this category.</p>
+          <button
+            id="show-all-btn"
+            class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
+          >
+            View all projects
+          </button>
+        </div>
+
+        <!-- Back link -->
+        <div class="pb-16">
+          <a href="/" class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+            ← Back to home
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+
+  <!-- Category filter script -->
+  <script>
+    const buttons = document.querySelectorAll('.category-btn');
+    const cards = document.querySelectorAll('.project-card');
+    const emptyState = document.getElementById('empty-state');
+    const showAllBtn = document.getElementById('show-all-btn');
+
+    function filterProjects(category: string) {
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const cardCategory = card.getAttribute('data-category');
+        if (category === 'all' || cardCategory === category) {
+          (card as HTMLElement).style.display = '';
+          visibleCount++;
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+
+      // Update button styles
+      buttons.forEach((btn) => {
+        const btnCategory = btn.getAttribute('data-category');
+        if (btnCategory === category) {
+          btn.classList.remove('border-border/40', 'text-muted-foreground');
+          btn.classList.add('border-brand', 'bg-brand-soft', 'text-brand');
+        } else {
+          btn.classList.add('border-border/40', 'text-muted-foreground');
+          btn.classList.remove('border-brand', 'bg-brand-soft', 'text-brand');
+        }
+      });
+
+      // Toggle empty state
+      if (emptyState) {
+        emptyState.classList.toggle('hidden', visibleCount > 0);
+      }
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category') || 'all';
+        filterProjects(category);
+      });
+    });
+
+    showAllBtn?.addEventListener('click', () => {
+      filterProjects('all');
+    });
+  </script>
+</BaseLayout>

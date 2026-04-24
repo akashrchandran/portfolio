@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BlogPagination from '../../components/BlogPagination.astro';
+import BlogPostGrid from '../../components/BlogPostGrid.astro';
+import { BLOG_PAGE_SIZE, getBlogListingData, getPostsForPage } from '../../lib/hashnode/client';
+
+const { allPosts, totalPages, featuredCount } = await getBlogListingData(BLOG_PAGE_SIZE);
+const posts = getPostsForPage(allPosts, 1, BLOG_PAGE_SIZE);
+---
+
+<BaseLayout 
+  title="Blog — Akash R Chandran" 
+  description="Notes on backend engineering: APIs, data systems, reliability, and production operations."
+>
+  <Header />
+
+  <main class="min-h-screen bg-background text-foreground pt-32">
+    <div class="max-w-6xl mx-auto px-6 sm:px-8">
+      <div class="space-y-12 sm:space-y-16">
+        <!-- Header -->
+        <div class="space-y-4">
+          <h1 class="text-5xl sm:text-6xl font-light tracking-tight">Blog</h1>
+          <p class="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            Notes on backend engineering: APIs, data systems, reliability, and production operations.
+          </p>
+
+          {featuredCount > 0 ? (
+            <p class="text-xs text-muted-foreground font-mono tracking-widest">
+              {featuredCount} FEATURED POST{featuredCount > 1 ? 'S' : ''}
+            </p>
+          ) : null}
+        </div>
+
+        <BlogPostGrid
+          posts={posts}
+          emptyMessage="No Hashnode posts found. Set HASHNODE_PUBLICATION_HOST to load your publication content."
+        />
+
+        <BlogPagination currentPage={1} totalPages={totalPages} />
+
+        <!-- Back link -->
+        <div class="pb-16">
+          <a href="/" class="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+            ← Back to home
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

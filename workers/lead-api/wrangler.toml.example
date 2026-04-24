@@ -1,0 +1,22 @@
+name = "portfolio-lead-api"
+main = "index.ts"
+compatibility_date = "2026-04-19"
+workers_dev = false
+preview_urls = false
+
+routes = [
+	{ pattern = "lead-api.your-domain.com", custom_domain = true }
+]
+
+[vars]
+CORS_ORIGINS = "https://your-domain.com,http://localhost:3000,http://localhost:4321,http://localhost:5173"
+RESEND_FROM = "Your Name <noreply@your-domain.com>"
+RESUME_URL = "https://your-domain.com/resume.pdf"
+RESUME_TOKEN_SECRET = "REPLACE_WITH_LONG_RANDOM_SECRET"
+RESUME_TEMPLATE_ID = "template-id"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-leads"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"

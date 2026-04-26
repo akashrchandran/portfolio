@@ -361,14 +361,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
       </div>
     </main>
   </div>
-{turnstileSiteKey ? (
-  <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    async
-    defer
-  ></script>
-) : null}
-
   <!-- Section reveal animation -->
   <script>
     const observer = new IntersectionObserver(
@@ -400,8 +392,49 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
     const turnstileWidget = document.getElementById('turnstileWidget') as HTMLDivElement | null;
     const leadsApiUrl = leadModal?.getAttribute('data-leads-api-url')?.trim() ?? '';
     const turnstileSiteKey = leadModal?.getAttribute('data-turnstile-site-key')?.trim() ?? '';
+    let turnstileLoader: Promise<void> | null = null;
     let isLeadModalClosing = false;
     let leadModalCloseTimeout: number | null = null;
+
+    const loadTurnstile = () => {
+      if (!turnstileSiteKey || !turnstileWidget) {
+        return Promise.resolve();
+      }
+
+      const existing = (window as Window & {
+        turnstile?: { render: (target: HTMLElement) => string };
+      }).turnstile;
+
+      if (existing) {
+        return Promise.resolve();
+      }
+
+      if (turnstileLoader) {
+        return turnstileLoader;
+      }
+
+      turnstileLoader = new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          const loaded = (window as Window & {
+            turnstile?: { render: (target: HTMLElement) => string };
+          }).turnstile;
+
+          if (loaded) {
+            loaded.render(turnstileWidget);
+          }
+
+          resolve();
+        };
+        script.onerror = () => reject(new Error('Failed to load captcha.'));
+        document.head.appendChild(script);
+      });
+
+      return turnstileLoader;
+    };
 
     const openLeadModal = () => {
       if (!leadModal) return;
@@ -429,6 +462,14 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
         leadModalPanel?.classList.remove('opacity-0', 'translate-y-4', 'sm:scale-95');
         leadModalPanel?.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
       });
+
+      loadTurnstile().catch(() => {
+        if (leadFormMessage) {
+          leadFormMessage.className = 'text-sm text-brand bg-brand-soft border border-brand rounded-md px-3 py-2';
+          leadFormMessage.textContent = 'Captcha is unavailable. Please try again later.';
+        }
+      });
+
       setTimeout(() => leadNameInput?.focus(), 80);
     };
 

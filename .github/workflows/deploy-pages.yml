@@ -22,6 +22,7 @@ jobs:
       HASHNODE_PUBLICATION_HOST: ${{ secrets.HASHNODE_PUBLICATION_HOST }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PUBLIC_LEADS_API_URL: ${{ secrets.PUBLIC_LEADS_API_URL }}
+      PUBLIC_GOOGLE_ANALYTICS_ID: ${{ secrets.PUBLIC_GOOGLE_ANALYTICS_ID }}
       PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
     steps:
       - name: Checkout

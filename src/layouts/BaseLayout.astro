@@ -3,32 +3,32 @@ interface Props {
   title: string;
   description?: string;
   canonicalUrl?: string;
-  ogType?: 'website' | 'article';
+  ogType?: "website" | "article";
   openGraphImage?: string;
   openGraphImageAlt?: string;
-  twitterCard?: 'summary' | 'summary_large_image';
+  twitterCard?: "summary" | "summary_large_image";
   noIndex?: boolean;
   publishedTime?: string;
   modifiedTime?: string;
 }
 
-import '../styles/globals.css';
+import "../styles/globals.css";
 
 const {
   title,
-  description = 'Backend Engineer with 2+ years of experience building fast, reliable, and secure backend systems.',
+  description = "Backend Engineer with 2+ years of experience building fast, reliable, and secure backend systems.",
   canonicalUrl,
-  ogType = 'website',
-  openGraphImage = '/placeholder-logo.png',
+  ogType = "website",
+  openGraphImage = "/placeholder-logo.png",
   openGraphImageAlt = title,
-  twitterCard = 'summary_large_image',
+  twitterCard = "summary_large_image",
   noIndex = false,
   publishedTime,
   modifiedTime,
 } = Astro.props;
 
-const siteName = 'Akash R Chandran';
-const siteUrl = Astro.site?.toString() ?? 'https://akashrchandran.hashnode.dev';
+const siteName = "Akash R Chandran";
+const siteUrl = Astro.site?.toString() ?? "https://akashrchandran.hashnode.dev";
 const canonical = canonicalUrl
   ? new URL(canonicalUrl, siteUrl).toString()
   : new URL(Astro.url.pathname, siteUrl).toString();
@@ -37,39 +37,39 @@ const socialImageUrl = openGraphImage
   ? new URL(openGraphImage, siteUrl).toString()
   : undefined;
 
-const robotsContent = noIndex ? 'noindex, nofollow' : 'index, follow';
+const robotsContent = noIndex ? "noindex, nofollow" : "index, follow";
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      '@type': 'WebSite',
+      "@type": "WebSite",
       name: siteName,
       url: siteUrl,
     },
     {
-      '@type': 'Person',
+      "@type": "Person",
       name: siteName,
       url: siteUrl,
       sameAs: [
-        'https://github.com/akashrchandran',
-        'https://linkedin.com/in/akashrchandran',
-        'https://twitter.com/akas__h',
+        "https://github.com/akashrchandran",
+        "https://linkedin.com/in/akashrchandran",
+        "https://twitter.com/akas__h",
       ],
-      jobTitle: 'Backend Engineer',
+      jobTitle: "Backend Engineer",
     },
     {
-      '@type': 'WebPage',
+      "@type": "WebPage",
       name: title,
       url: canonical,
       description,
       isPartOf: {
-        '@id': siteUrl,
+        "@id": siteUrl,
       },
     },
   ],
 };
-const GA_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
+const GA_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID ?? '';
 ---
 
 <!doctype html>
@@ -84,12 +84,12 @@ const GA_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
     <meta name="author" content={siteName} />
     <meta name="application-name" content={siteName} />
     <meta name="color-scheme" content="light dark" />
-    
+
     <!-- SEO Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    
+
     <!-- Open Graph / Social -->
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
@@ -97,19 +97,25 @@ const GA_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:locale" content="en_US" />
-    {socialImageUrl ? (
-      <>
-        <meta property="og:image" content={socialImageUrl} />
-        <meta property="og:image:alt" content={openGraphImageAlt} />
-      </>
-    ) : null}
-    {ogType === 'article' && publishedTime ? (
-      <meta property="article:published_time" content={publishedTime} />
-    ) : null}
-    {ogType === 'article' && modifiedTime ? (
-      <meta property="article:modified_time" content={modifiedTime} />
-    ) : null}
-    
+    {
+      socialImageUrl ? (
+        <>
+          <meta property="og:image" content={socialImageUrl} />
+          <meta property="og:image:alt" content={openGraphImageAlt} />
+        </>
+      ) : null
+    }
+    {
+      ogType === "article" && publishedTime ? (
+        <meta property="article:published_time" content={publishedTime} />
+      ) : null
+    }
+    {
+      ogType === "article" && modifiedTime ? (
+        <meta property="article:modified_time" content={modifiedTime} />
+      ) : null
+    }
+
     <!-- Twitter -->
     <meta name="twitter:card" content={twitterCard} />
     <meta name="twitter:title" content={title} />
@@ -117,44 +123,53 @@ const GA_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
     <meta name="twitter:url" content={canonical} />
     <meta name="twitter:site" content="@akas__h" />
     <meta name="twitter:creator" content="@akas__h" />
-    {socialImageUrl ? (
-      <>
-        <meta name="twitter:image" content={socialImageUrl} />
-        <meta name="twitter:image:alt" content={openGraphImageAlt} />
-      </>
-    ) : null}
-    
+    {
+      socialImageUrl ? (
+        <>
+          <meta name="twitter:image" content={socialImageUrl} />
+          <meta name="twitter:image:alt" content={openGraphImageAlt} />
+        </>
+      ) : null
+    }
+
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    
-    {GA_ID ? (
-      <>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
-        <script is:inline>
-          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_ID}');`}
+
+    {
+      GA_ID.length > 0 ? (
+        <>
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          />
+          <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag("js", new Date());
+          gtag("config", "{GA_ID}");
         </script>
-      </>
-    ) : null}
+        </>
+      ) : null
+    }
 
     <!-- Structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    
   </head>
   <body class="font-sans antialiased">
     <slot />
 
     <!-- Theme toggle script — runs before paint to avoid flash -->
     <script is:inline>
-      (function() {
-        const saved = localStorage.getItem('theme');
-        if (saved === 'light') {
-          document.documentElement.classList.remove('dark');
+      (function () {
+        const saved = localStorage.getItem("theme");
+        if (saved === "light") {
+          document.documentElement.classList.remove("dark");
         } else {
-          document.documentElement.classList.add('dark');
+          document.documentElement.classList.add("dark");
         }
       })();
     </script>

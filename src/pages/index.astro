@@ -266,9 +266,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
               Always interested in backend engineering opportunities, architecture discussions, and reliability-focused collaborations. Based in Kochi, Kerala.
             </p>
 
-            <a
-              href="mailto:chandranrakash@gmail.com"
-              class="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-brand bg-brand text-white transition-all duration-300 group hover:bg-[color:var(--brand-hover)] shadow-[0_0_24px_-12px_var(--brand-glow)] hover:shadow-[0_0_28px_-10px_var(--brand-glow)]"
+            <button
+              type="button"
+              data-open-lead-modal
+              class="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-brand bg-brand text-white transition-all duration-300 group hover:bg-[color:var(--brand-hover)] shadow-[0_0_24px_-12px_var(--brand-glow)] hover:shadow-[0_0_28px_-10px_var(--brand-glow)] cursor-pointer"
             >
               <span class="font-medium">Get in touch</span>
               <svg
@@ -279,7 +280,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </a>
+            </button>
           </div>
 
           <div class="pt-8 border-t border-border/40 space-y-6">
@@ -381,7 +382,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
     const leadModal = document.getElementById('leadModal') as HTMLDivElement | null;
     const openLeadModalButtons = Array.from(
       document.querySelectorAll('[data-open-lead-modal], #openLeadModal')
-    ) as HTMLButtonElement[];
+    ) as HTMLElement[];
     const closeLeadModalButton = document.getElementById('closeLeadModal') as HTMLButtonElement | null;
     const leadModalBackdrop = document.getElementById('leadModalBackdrop') as HTMLDivElement | null;
     const leadModalPanel = document.getElementById('leadModalPanel') as HTMLDivElement | null;
@@ -436,7 +437,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
       return turnstileLoader;
     };
 
-    const openLeadModal = () => {
+    const openLeadModal = (event?: Event) => {
+      event?.preventDefault();
       if (!leadModal) return;
 
       if (leadModalCloseTimeout !== null) {

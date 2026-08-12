@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
-  --foreground: #0a0a0a;
-  --card: #fafafa;
-  --card-foreground: #0a0a0a;
-  --primary: #0a0a0a;
-  --primary-foreground: #fafafa;
-  --secondary: #f5f5f5;
-  --secondary-foreground: #0a0a0a;
-  --muted: #f0f0f0;
-  --muted-foreground: #5f5f5f;
-  --accent: #f0f0f0;
-  --accent-foreground: #0a0a0a;
-  --border: #e5e5e5;
-  --input: #e5e5e5;
+  --background: 250 250 250;
+  --foreground: 10 10 10;
+  --card: 250 250 250;
+  --card-foreground: 10 10 10;
+  --primary: 10 10 10;
+  --primary-foreground: 250 250 250;
+  --secondary: 245 245 245;
+  --secondary-foreground: 10 10 10;
+  --muted: 240 240 240;
+  --muted-foreground: 95 95 95;
+  --accent: 240 240 240;
+  --accent-foreground: 10 10 10;
+  --border: 229 229 229;
+  --input: 229 229 229;
   --brand: #0060d6;
   --brand-hover: #0050b8;
   --brand-soft: rgba(0, 96, 214, 0.12);
@@ -27,20 +27,20 @@
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #f5f5f5;
-  --card: #0a0a0a;
-  --card-foreground: #f5f5f5;
-  --primary: #f5f5f5;
-  --primary-foreground: #0a0a0a;
-  --secondary: #262626;
-  --secondary-foreground: #f5f5f5;
-  --muted: #262626;
-  --muted-foreground: #b5b5b5;
-  --accent: #262626;
-  --accent-foreground: #f5f5f5;
-  --border: #262626;
-  --input: #262626;
+  --background: 10 10 10;
+  --foreground: 245 245 245;
+  --card: 10 10 10;
+  --card-foreground: 245 245 245;
+  --primary: 245 245 245;
+  --primary-foreground: 10 10 10;
+  --secondary: 38 38 38;
+  --secondary-foreground: 245 245 245;
+  --muted: 38 38 38;
+  --muted-foreground: 181 181 181;
+  --accent: 38 38 38;
+  --accent-foreground: 245 245 245;
+  --border: 38 38 38;
+  --input: 38 38 38;
   --brand: #2997ff;
   --brand-hover: #52abff;
   --brand-soft: rgba(41, 151, 255, 0.14);
@@ -51,12 +51,12 @@
 }
 
 * {
-  border-color: var(--border);
+  border-color: rgb(var(--border));
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -81,11 +81,11 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: rgb(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--muted-foreground);
+  background: rgb(var(--muted-foreground));
   border-radius: 3px;
 }
 
@@ -95,7 +95,7 @@ html {
 
 ::selection {
   background: var(--brand);
-  color: var(--background);
+  color: rgb(var(--background));
 }
 
 :where(a, button, input, textarea, select):focus-visible {

@@ -5,7 +5,7 @@ import {
   type HashnodePost,
 } from "./schema";
 
-const HASHNODE_GQL_ENDPOINT = "https://blog.akashrchandran.in/api/graphql";
+const HASHNODE_GQL_ENDPOINT = import.meta.env.HASHNODE_GQL_ENDPOINT?.trim() || "https://blog.akashrchandran.in/api/graphql";
 const DEFAULT_POST_LIMIT = 20;
 
 export const BLOG_PAGE_SIZE = 6;

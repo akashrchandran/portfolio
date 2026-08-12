@@ -344,7 +344,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ''
               {turnstileSiteKey ? (
                 <div class="space-y-2">
                   <p class="text-sm text-muted-foreground">Captcha <span class="text-xs text-muted-foreground/80">(Required)</span></p>
-                  <div id="turnstileWidget" class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="auto"></div>
+                  <div id="turnstileWidget" class="cf-turnstile min-h-[73px]" data-sitekey={turnstileSiteKey} data-theme="auto"></div>
                 </div>
               ) : (
                 <p class="text-sm text-foreground">Captcha is unavailable. Please configure Turnstile.</p>

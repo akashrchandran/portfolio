@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import logoLight from '../assets/logo-light.webp';
+import logoDark from '../assets/logo-dark.webp';
+
 const sections = [
   { id: "intro", label: "Home", href: "/#intro" },
   { id: "work", label: "Work", href: "/#work" },
@@ -12,22 +16,22 @@ const sections = [
   <div class="max-w-6xl mx-auto rounded-2xl border border-border/40 bg-background/80 backdrop-blur-md">
   <nav class="px-6 sm:px-8 py-4 flex items-center justify-between">
     <a href="/" class="inline-flex items-center hover:opacity-70 transition-opacity duration-300" aria-label="Go to homepage">
-      <img
-        src="/logo-light.webp"
+      <Image
+        src={logoLight}
         alt="Akash logo"
         class="block dark:hidden h-6 md:h-7 w-auto select-none"
-        width="640"
-        height="640"
+        width={640}
+        height={640}
         loading="eager"
         fetchpriority="high"
         decoding="async"
       />
-      <img
-        src="/logo-dark.webp"
+      <Image
+        src={logoDark}
         alt="Akash logo"
         class="hidden dark:block h-6 md:h-7 w-auto select-none"
-        width="640"
-        height="640"
+        width={640}
+        height={640}
         loading="eager"
         fetchpriority="high"
         decoding="async"

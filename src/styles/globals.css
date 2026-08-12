@@ -17,12 +17,12 @@
   --accent-foreground: #0a0a0a;
   --border: #e5e5e5;
   --input: #e5e5e5;
-  --brand: #006ff0;
-  --brand-hover: #0a84ff;
-  --brand-soft: rgba(0, 111, 240, 0.12);
-  --brand-soft-strong: rgba(0, 111, 240, 0.2);
-  --brand-border: rgba(0, 111, 240, 0.5);
-  --brand-glow: rgba(0, 111, 240, 0.35);
+  --brand: #0060d6;
+  --brand-hover: #0050b8;
+  --brand-soft: rgba(0, 96, 214, 0.12);
+  --brand-soft-strong: rgba(0, 96, 214, 0.2);
+  --brand-border: rgba(0, 96, 214, 0.45);
+  --brand-glow: rgba(0, 96, 214, 0.3);
   --ring: var(--brand);
 }
 
@@ -41,12 +41,12 @@
   --accent-foreground: #f5f5f5;
   --border: #262626;
   --input: #262626;
-  --brand: #0060d6;
-  --brand-hover: #0058c9;
-  --brand-soft: rgba(0, 96, 214, 0.14);
-  --brand-soft-strong: rgba(0, 96, 214, 0.22);
-  --brand-border: rgba(0, 96, 214, 0.56);
-  --brand-glow: rgba(0, 96, 214, 0.38);
+  --brand: #2997ff;
+  --brand-hover: #52abff;
+  --brand-soft: rgba(41, 151, 255, 0.14);
+  --brand-soft-strong: rgba(41, 151, 255, 0.22);
+  --brand-border: rgba(41, 151, 255, 0.5);
+  --brand-glow: rgba(41, 151, 255, 0.35);
   --ring: var(--brand);
 }
 
@@ -95,7 +95,7 @@ html {
 
 ::selection {
   background: var(--brand);
-  color: #f8fbff;
+  color: var(--background);
 }
 
 :where(a, button, input, textarea, select):focus-visible {

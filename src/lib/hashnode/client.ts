@@ -1,25 +1,22 @@
-import { GraphQLClient, gql } from 'graphql-request';
+import { GraphQLClient, gql } from "graphql-request";
 import {
   AllPostsDataSchema,
   PostDataSchema,
   type HashnodePost,
-} from './schema';
+} from "./schema";
 
-const HASHNODE_GQL_ENDPOINT = 'https://gql.hashnode.com';
+const HASHNODE_GQL_ENDPOINT = import.meta.env.HASHNODE_GQL_ENDPOINT?.trim() || "https://blog.akashrchandran.in/api/graphql";
 const DEFAULT_POST_LIMIT = 20;
 
 export const BLOG_PAGE_SIZE = 6;
 
 const allPostsCache = new Map<number, Promise<HashnodePost[]>>();
-
-const ALL_POST_FIELDS = `
-  id
+const ALL_POST_FIELDS = `  id
   title
   subtitle
   brief
   slug
   featured
-  featuredAt
   publishedAt
   readTimeInMinutes
   tags {
@@ -32,17 +29,14 @@ const ALL_POST_FIELDS = `
   author {
     name
     profilePicture
-  }
-`;
+  }`;
 
-const POST_DETAIL_FIELDS = `
-  id
+const POST_DETAIL_FIELDS = `  id
   title
   subtitle
   brief
   slug
   featured
-  featuredAt
   publishedAt
   readTimeInMinutes
   tags {
@@ -58,8 +52,7 @@ const POST_DETAIL_FIELDS = `
   }
   content {
     html
-  }
-`;
+  }`;
 
 const getPublicationHost = () => {
   const publicationHost = import.meta.env.HASHNODE_PUBLICATION_HOST;
@@ -72,7 +65,8 @@ export const isHashnodeConfigured = () => Boolean(getPublicationHost());
 
 export const sortHashnodePosts = (posts: HashnodePost[]) => {
   return [...posts].sort((a, b) => {
-    const featuredDelta = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+    const featuredDelta =
+      Number(Boolean(b.featured)) - Number(Boolean(a.featured));
     if (featuredDelta !== 0) {
       return featuredDelta;
     }
@@ -83,7 +77,9 @@ export const sortHashnodePosts = (posts: HashnodePost[]) => {
   });
 };
 
-export const getAllPosts = async (limit = DEFAULT_POST_LIMIT): Promise<HashnodePost[]> => {
+export const getAllPosts = async (
+  limit = DEFAULT_POST_LIMIT,
+): Promise<HashnodePost[]> => {
   const host = getPublicationHost();
   if (!host) {
     return [];
@@ -133,7 +129,9 @@ export const getAllPosts = async (limit = DEFAULT_POST_LIMIT): Promise<HashnodeP
   }
 };
 
-export const getSortedPosts = async (limit = DEFAULT_POST_LIMIT): Promise<HashnodePost[]> => {
+export const getSortedPosts = async (
+  limit = DEFAULT_POST_LIMIT,
+): Promise<HashnodePost[]> => {
   const posts = await getAllPosts(limit);
   return sortHashnodePosts(posts);
 };
@@ -141,7 +139,11 @@ export const getSortedPosts = async (limit = DEFAULT_POST_LIMIT): Promise<Hashno
 export const getBlogListingData = async (
   pageSize = BLOG_PAGE_SIZE,
   limit = DEFAULT_POST_LIMIT,
-): Promise<{ allPosts: HashnodePost[]; totalPages: number; featuredCount: number }> => {
+): Promise<{
+  allPosts: HashnodePost[];
+  totalPages: number;
+  featuredCount: number;
+}> => {
   const allPosts = await getSortedPosts(limit);
   return {
     allPosts,
